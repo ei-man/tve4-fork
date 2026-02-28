@@ -9,97 +9,97 @@ var TOP_MENU_BUTTONS =
     ["ButtonRewards", RewardsClick],
     ["ButtonInfo", InfoClick],
     ["Discord", DiscordOpen],
-]
+];
 
-var RewardsButton = null
-var updateRewardsLoop = true
+var RewardsButton = null;
+var updateRewardsLoop = true;
 
 function Init() {
-    let TopMenuCustom = $("#TopMenuCustom")
-    for (let button_info of TOP_MENU_BUTTONS) {
-        let button = $.CreatePanel("Panel", TopMenuCustom, "")
-        button.AddClass("ButtonTopMenu")
-        button.AddClass(button_info[0])
+    const TopMenuCustom = $("#TopMenuCustom");
+    for (const button_info of TOP_MENU_BUTTONS) {
+        const button = $.CreatePanel("Panel", TopMenuCustom, "");
+        button.AddClass("ButtonTopMenu");
+        button.AddClass(button_info[0]);
         if (button_info[0] == "ButtonRewards") {
-            RewardsButton = button
+            RewardsButton = button;
         }
-        let function_button = button_info[1]
-        button.SetPanelEvent("onactivate", function_button)
+        const function_button = button_info[1];
+        button.SetPanelEvent("onactivate", function_button);
     }
 
-    UpdateRewardsButtonLoop() // Запускаем цикл
+    UpdateRewardsButtonLoop(); // Запускаем цикл
 }
 
 function UpdateRewardsButtonLoop() {
     if (!updateRewardsLoop) {
-        return
+        return;
     }
 
-    UpdateRewardsButton()
+    UpdateRewardsButton();
 
     // Следующий вызов через 1 секунду
-    $.Schedule(5, UpdateRewardsButtonLoop)
+    $.Schedule(5, UpdateRewardsButtonLoop);
 }
 
 function UpdateRewardsButton() {
     if (!RewardsButton) {
-        return
+        return;
     }
 
-    let shop_table = CustomNetTables.GetTableValue("Shop", Players.GetLocalPlayer())
+    const shop_table = CustomNetTables.GetTableValue("Shop", Players.GetLocalPlayer());
     if (!shop_table || !shop_table[6]) {
-        return
+        return;
     }
 
-    let daily_info = shop_table[6]
+    const daily_info = shop_table[6];
 
     if (Number(daily_info[0]) < Number(daily_info[1])) {
-        RewardsButton.AddClass("Unclaimed")
+        RewardsButton.AddClass("Unclaimed");
     } else {
-        RewardsButton.RemoveClass("Unclaimed")
-        updateRewardsLoop = false // Отключаем цикл при получении награды
+        RewardsButton.RemoveClass("Unclaimed");
+        updateRewardsLoop = false; // Отключаем цикл при получении награды
     }
 }
 
 function DiscordOpen()
 {
-    $.DispatchEvent("ExternalBrowserGoToURL", 'https://discord.gg/tve4')
+    $.DispatchEvent("ExternalBrowserGoToURL", "https://discord.gg/tve4");
 }
 
 function StatsClick()
 {
-    GameUI.CustomUIConfig().CloseLeaderboardGlobal()
-    GameUI.CustomUIConfig().CloseInfoGlobal()
-    GameUI.CustomUIConfig().OpenStatsGlobal()
+    GameUI.CustomUIConfig().CloseLeaderboardGlobal();
+    GameUI.CustomUIConfig().CloseInfoGlobal();
+    GameUI.CustomUIConfig().OpenStatsGlobal();
 }
 
 function LeaderboardsClick()
 {
-    GameUI.CustomUIConfig().CloseStatsGlobal()
-    GameUI.CustomUIConfig().CloseInfoGlobal()
-    GameUI.CustomUIConfig().OpenLeaderboardGlobal()
+    GameUI.CustomUIConfig().CloseStatsGlobal();
+    GameUI.CustomUIConfig().CloseInfoGlobal();
+    GameUI.CustomUIConfig().OpenLeaderboardGlobal();
 }
 
 function InfoClick()
 {
-    GameUI.CustomUIConfig().CloseLeaderboardGlobal()
-    GameUI.CustomUIConfig().CloseStatsGlobal()
-    GameUI.CustomUIConfig().OpenInfoGlobal()
+    GameUI.CustomUIConfig().CloseLeaderboardGlobal();
+    GameUI.CustomUIConfig().CloseStatsGlobal();
+    GameUI.CustomUIConfig().OpenInfoGlobal();
 }
 
 function BattlePassClick()
 {
-    GameUI.CustomUIConfig().OpenBPGlobal()
+    GameUI.CustomUIConfig().OpenBPGlobal();
 }
 
 function RewardsClick()
 {
-    GameUI.CustomUIConfig().OpenRewardsGlobal()
+    GameUI.CustomUIConfig().OpenRewardsGlobal();
 }
 
 function StoreClick()
 {
-    GameUI.CustomUIConfig().OpenStoreGlobal()
+    GameUI.CustomUIConfig().OpenStoreGlobal();
 }
 
-Init()
+Init();

@@ -1,13 +1,13 @@
 // @ts-nocheck
-var INIT_PANEL = false
-var HAS_PLAYER_IN_ALL_TABLE = false
+var INIT_PANEL = false;
+var HAS_PLAYER_IN_ALL_TABLE = false;
 var FAKE_LEADERBOARD_LIST =
 {
 
-}
+};
 var FAKE_PLAYER_LOCAL =
 {
-}
+};
 /*
 var FAKE_PLAYER_LOCAL =
 {
@@ -24,110 +24,110 @@ var FAKE_PLAYER_LOCAL =
 
 function Leaderboard_OpenPanel()
 {
-    let Leaderboard = $("#Leaderboard")
-    Leaderboard.SetHasClass("Open", !Leaderboard.BHasClass("Open"))
+    const Leaderboard = $("#Leaderboard");
+    Leaderboard.SetHasClass("Open", !Leaderboard.BHasClass("Open"));
     if (!INIT_PANEL)
     {
-        INIT_PANEL = true
-        InitPlayersRating(1)
-        InitLocalPlayer()
+        INIT_PANEL = true;
+        InitPlayersRating(1);
+        InitLocalPlayer();
     }
 }
 
 function Leaderboard_ClosePanel()
 {
-    let Leaderboard = $("#Leaderboard")
+    const Leaderboard = $("#Leaderboard");
     if (Leaderboard.BHasClass("Open"))
     {
-        Leaderboard.SetHasClass("Open", false)
+        Leaderboard.SetHasClass("Open", false);
     }
 }
 
 function InitPlayersRating(sort_id)
 {
-    let PlayersList = $("#PlayersList")
-    PlayersList.RemoveAndDeleteChildren()
-    FAKE_LEADERBOARD_LIST = CustomNetTables.GetTableValue("Shop", "top10")
-    let players_table = []
+    const PlayersList = $("#PlayersList");
+    PlayersList.RemoveAndDeleteChildren();
+    FAKE_LEADERBOARD_LIST = CustomNetTables.GetTableValue("Shop", "top10");
+    const players_table = [];
     for (num in FAKE_LEADERBOARD_LIST)
     {
-        let player_info = FAKE_LEADERBOARD_LIST[num]
-        players_table.push([player_info[1], player_info[2], player_info[3], player_info[4], player_info[5]])
+        const player_info = FAKE_LEADERBOARD_LIST[num];
+        players_table.push([player_info[1], player_info[2], player_info[3], player_info[4], player_info[5]]);
     }
     players_table.sort((a, b) => b[sort_id] - a[sort_id]);
     for (num in players_table)
     {
-        IsCondLocalPlayer(players_table[num])
-        CreatePlayer(num, players_table[num])
+        IsCondLocalPlayer(players_table[num]);
+        CreatePlayer(num, players_table[num]);
     }
 }
 
 function IsCondLocalPlayer(players_table)
 {
-    let shop_table = CustomNetTables.GetTableValue("Shop", Entities.GetPlayerOwnerID(Players.GetLocalPlayerPortraitUnit()))?.[13];
-    if (!shop_table) { return }
-    let local_player_info = [shop_table[2], shop_table[3], shop_table[4], shop_table[5], shop_table[6]]
+    const shop_table = CustomNetTables.GetTableValue("Shop", Entities.GetPlayerOwnerID(Players.GetLocalPlayerPortraitUnit()))?.[13];
+    if (!shop_table) { return; }
+    const local_player_info = [shop_table[2], shop_table[3], shop_table[4], shop_table[5], shop_table[6]];
     if (players_table[0] == local_player_info[0])
     {
-        HAS_PLAYER_IN_ALL_TABLE = true
+        HAS_PLAYER_IN_ALL_TABLE = true;
     }
 }
 
 function InitLocalPlayer()
 {
-    let shop_table = CustomNetTables.GetTableValue("Shop", Entities.GetPlayerOwnerID(Players.GetLocalPlayerPortraitUnit()))?.[13];
-    if (!shop_table) { return }
-    let local_player_info = [shop_table[2], shop_table[3], shop_table[4], shop_table[5], shop_table[6]]
+    const shop_table = CustomNetTables.GetTableValue("Shop", Entities.GetPlayerOwnerID(Players.GetLocalPlayerPortraitUnit()))?.[13];
+    if (!shop_table) { return; }
+    const local_player_info = [shop_table[2], shop_table[3], shop_table[4], shop_table[5], shop_table[6]];
     if (HAS_PLAYER_IN_ALL_TABLE)
     {
-        return
+        return;
     }
-    CreatePlayer(shop_table[1], local_player_info, true)
+    CreatePlayer(shop_table[1], local_player_info, true);
 } 
 
 function CreatePlayer(num, player_info, is_local) 
 {   
-    let PlayersList = $("#PlayersList")
+    let PlayersList = $("#PlayersList");
     if (is_local)
     {
-        PlayersList = $("#LocalPlayer")
+        PlayersList = $("#LocalPlayer");
     }
 
-    let Line = $.CreatePanel("Panel", PlayersList, "");
+    const Line = $.CreatePanel("Panel", PlayersList, "");
     Line.AddClass("LinePlayer");
-    Line.AddClass("LinePlayer_"+(Number(num) + 1))
+    Line.AddClass("LinePlayer_"+(Number(num) + 1));
 
-    let Leaderboard_column_id = $.CreatePanel("Label", Line, "")
-    Leaderboard_column_id.AddClass("Leaderboard_column_id")
-    Leaderboard_column_id.text = (Number(num) + 1)
+    const Leaderboard_column_id = $.CreatePanel("Label", Line, "");
+    Leaderboard_column_id.AddClass("Leaderboard_column_id");
+    Leaderboard_column_id.text = (Number(num) + 1);
 
-    let Leaderboard_column_name = $.CreatePanel("Panel", Line, "")
-    Leaderboard_column_name.AddClass("Leaderboard_column_name")
-    Leaderboard_column_name.style.flowChildren = "right"
+    const Leaderboard_column_name = $.CreatePanel("Panel", Line, "");
+    Leaderboard_column_name.AddClass("Leaderboard_column_name");
+    Leaderboard_column_name.style.flowChildren = "right";
 
-    let Leaderboard_column_name_avatar = $.CreatePanel("DOTAAvatarImage", Leaderboard_column_name, "", {style:"width:22px;height:22px;margin-right:10px;vertical-align:center;"})
-    Leaderboard_column_name_avatar.accountid = player_info[0]
+    const Leaderboard_column_name_avatar = $.CreatePanel("DOTAAvatarImage", Leaderboard_column_name, "", {style:"width:22px;height:22px;margin-right:10px;vertical-align:center;"});
+    Leaderboard_column_name_avatar.accountid = player_info[0];
     
-    let Leaderboard_column_name_label = $.CreatePanel("DOTAUserName", Leaderboard_column_name, "", {style:"vertical-align:center;"})
-    Leaderboard_column_name_label.AddClass("Leaderboard_column_name_label")
-    Leaderboard_column_name_label.steamid = player_info[0]
+    const Leaderboard_column_name_label = $.CreatePanel("DOTAUserName", Leaderboard_column_name, "", {style:"vertical-align:center;"});
+    Leaderboard_column_name_label.AddClass("Leaderboard_column_name_label");
+    Leaderboard_column_name_label.steamid = player_info[0];
 
-    let Leaderboard_column_sum = $.CreatePanel("Label", Line, "")
-    Leaderboard_column_sum.AddClass("Leaderboard_column_sum")
-    Leaderboard_column_sum.text = player_info[1]
+    const Leaderboard_column_sum = $.CreatePanel("Label", Line, "");
+    Leaderboard_column_sum.AddClass("Leaderboard_column_sum");
+    Leaderboard_column_sum.text = player_info[1];
 
-    let Leaderboard_column_troll = $.CreatePanel("Label", Line, "")
-    Leaderboard_column_troll.AddClass("Leaderboard_column_troll")
-    Leaderboard_column_troll.text = player_info[2]
+    const Leaderboard_column_troll = $.CreatePanel("Label", Line, "");
+    Leaderboard_column_troll.AddClass("Leaderboard_column_troll");
+    Leaderboard_column_troll.text = player_info[2];
 
-    let Leaderboard_column_elves = $.CreatePanel("Label", Line, "")
-    Leaderboard_column_elves.AddClass("Leaderboard_column_elves")
-    Leaderboard_column_elves.text = player_info[3]
+    const Leaderboard_column_elves = $.CreatePanel("Label", Line, "");
+    Leaderboard_column_elves.AddClass("Leaderboard_column_elves");
+    Leaderboard_column_elves.text = player_info[3];
 
-    let Leaderboard_column_games = $.CreatePanel("Label", Line, "")
-    Leaderboard_column_games.AddClass("Leaderboard_column_games")
-    Leaderboard_column_games.text = player_info[4]
+    const Leaderboard_column_games = $.CreatePanel("Label", Line, "");
+    Leaderboard_column_games.AddClass("Leaderboard_column_games");
+    Leaderboard_column_games.text = player_info[4];
 } 
 
-GameUI.CustomUIConfig().OpenLeaderboardGlobal = Leaderboard_OpenPanel
-GameUI.CustomUIConfig().CloseLeaderboardGlobal = Leaderboard_ClosePanel
+GameUI.CustomUIConfig().OpenLeaderboardGlobal = Leaderboard_OpenPanel;
+GameUI.CustomUIConfig().CloseLeaderboardGlobal = Leaderboard_ClosePanel;

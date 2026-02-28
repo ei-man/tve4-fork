@@ -1,30 +1,30 @@
 // @ts-nocheck
 function TopNotification( msg ) {
-  AddNotification(msg, $('#TopNotifications'));
+  AddNotification(msg, $("#TopNotifications"));
 }
 
 function BottomNotification(msg) {
-  AddNotification(msg, $('#BottomNotifications'));
+  AddNotification(msg, $("#BottomNotifications"));
 }
 
 function TopRemoveNotification(msg){
-  RemoveNotification(msg, $('#TopNotifications'));
+  RemoveNotification(msg, $("#TopNotifications"));
 }
 
 function BottomRemoveNotification(msg){
-  RemoveNotification(msg, $('#BottomNotifications'));
+  RemoveNotification(msg, $("#BottomNotifications"));
 }
 
 
 function RemoveNotification(msg, panel){
-  var count = msg.count;
+  const count = msg.count;
   if (count > 0 && panel.GetChildCount() > 0){
-    var start = panel.GetChildCount() - count;
+    let start = panel.GetChildCount() - count;
     if (start < 0)
-      start = 0;
+      {start = 0;}
 
     for (i=start;i<panel.GetChildCount(); i++){
-      var lastPanel = panel.GetChild(i);
+      const lastPanel = panel.GetChild(i);
       //lastPanel.SetAttributeInt("deleted", 1);
       lastPanel.deleted = true;
       lastPanel.DeleteAsync(0);
@@ -33,45 +33,45 @@ function RemoveNotification(msg, panel){
 }
 
 function AddNotification(msg, panel) {
-  var newNotification = true;
-  var lastNotification = panel.GetChild(panel.GetChildCount() - 1)
+  let newNotification = true;
+  let lastNotification = panel.GetChild(panel.GetChildCount() - 1);
   ////$.Msg(msg)
 
   msg.continue = msg.continue || false;
   //msg.continue = true;
 
   if (lastNotification != null && msg.continue) 
-    newNotification = false;
+    {newNotification = false;}
 
   if (newNotification){
-    lastNotification = $.CreatePanel('Panel', panel, '');
-    lastNotification.AddClass('NotificationLine')
+    lastNotification = $.CreatePanel("Panel", panel, "");
+    lastNotification.AddClass("NotificationLine");
     lastNotification.hittest = false;
   }
 
-  var notification = null;
+  let notification = null;
   
   if (msg.hero != null)
-    notification = $.CreatePanel('DOTAHeroImage', lastNotification, '');
+    {notification = $.CreatePanel("DOTAHeroImage", lastNotification, "");}
   else if (msg.image != null)
-    notification = $.CreatePanel('Image', lastNotification, '');
+    {notification = $.CreatePanel("Image", lastNotification, "");}
   else if (msg.ability != null)
-    notification = $.CreatePanel('DOTAAbilityImage', lastNotification, '');
+    {notification = $.CreatePanel("DOTAAbilityImage", lastNotification, "");}
   else if (msg.item != null)
-    notification = $.CreatePanel('DOTAItemImage', lastNotification, '');
+    {notification = $.CreatePanel("DOTAItemImage", lastNotification, "");}
   else
-    notification = $.CreatePanel('Label', lastNotification, '');
+    {notification = $.CreatePanel("Label", lastNotification, "");}
 
-  if (typeof(msg.duration) != "number"){
+  if (typeof(msg.duration) !== "number"){
     ////$.Msg("[Notifications] Notification Duration is not a number!");
-    msg.duration = 3
+    msg.duration = 3;
   }
   
   if (newNotification){
     $.Schedule(msg.duration, function(){
       ////$.Msg('callback')
       if (lastNotification.deleted)
-        return;
+        {return;}
       
       lastNotification.DeleteAsync(0);
     });
@@ -79,33 +79,33 @@ function AddNotification(msg, panel) {
 
   if (msg.hero != null){
     notification.heroimagestyle = msg.imagestyle || "icon";
-    notification.heroname = msg.hero
+    notification.heroname = msg.hero;
     notification.hittest = false;
   } else if (msg.image != null){
     notification.SetImage(msg.image);
     notification.hittest = false;
   } else if (msg.ability != null){
-    notification.abilityname = msg.ability
+    notification.abilityname = msg.ability;
     notification.hittest = false;
   } else if (msg.item != null){
-    notification.itemname = msg.item
+    notification.itemname = msg.item;
     notification.hittest = false;
   } else{
     notification.html = true;
-    var text = msg.text || "No Text provided";
-    notification.text = $.Localize("#" + text)
+    const text = msg.text || "No Text provided";
+    notification.text = $.Localize("#" + text);
     notification.hittest = false;
-    notification.AddClass('TitleText');
+    notification.AddClass("TitleText");
   }
   
   if (msg.class)
-    notification.AddClass(msg.class);
+    {notification.AddClass(msg.class);}
   else
-    notification.AddClass('NotificationMessage');
+    {notification.AddClass("NotificationMessage");}
 
   if (msg.style){
-    for (var key in msg.style){
-      var value = msg.style[key]
+    for (const key in msg.style){
+      const value = msg.style[key];
       notification.style[key] = value;
     }
   }

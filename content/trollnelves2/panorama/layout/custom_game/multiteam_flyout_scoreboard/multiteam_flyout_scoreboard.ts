@@ -15,7 +15,7 @@ function setSecondInterval(func, seconds) {
         func();
         repeat();
       }
-    })
+    });
   }
   repeat();
   return () => {

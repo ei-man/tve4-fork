@@ -1,11 +1,11 @@
 // @ts-nocheck
 const ui = GameUI.CustomUIConfig();
 function ToggleMute() {
-    const playerId = $.GetContextPanel().GetAttributeInt('player_id', -1);
+    const playerId = $.GetContextPanel().GetAttributeInt("player_id", -1);
     if (playerId !== -1) {
         const newIsMuted = !Game.IsPlayerMuted(playerId);
         Game.SetPlayerMuted(playerId, newIsMuted);
-        $.GetContextPanel().SetHasClass('player_muted', newIsMuted);
+        $.GetContextPanel().SetHasClass("player_muted", newIsMuted);
     }
 }
 
@@ -13,12 +13,12 @@ function OnGiveResourcesButton() {
     const playerPanel = $.GetContextPanel();
     const casterID = Players.GetLocalPlayer();
     const target = playerPanel.pID;
-    const gold = Number(playerPanel.FindChildInLayoutFile('GoldEntry').text) || 0;
+    const gold = Number(playerPanel.FindChildInLayoutFile("GoldEntry").text) || 0;
     const lumber =
-        Number(playerPanel.FindChildInLayoutFile('LumberEntry').text) || 0;
-    playerPanel.FindChildInLayoutFile('GoldEntry').text = '';
-    playerPanel.FindChildInLayoutFile('LumberEntry').text = '';
-    GameEvents.SendCustomGameEventToServer('give_resources', {
+        Number(playerPanel.FindChildInLayoutFile("LumberEntry").text) || 0;
+    playerPanel.FindChildInLayoutFile("GoldEntry").text = "";
+    playerPanel.FindChildInLayoutFile("LumberEntry").text = "";
+    GameEvents.SendCustomGameEventToServer("give_resources", {
         gold,
         lumber,
         target,
@@ -30,7 +30,7 @@ function OnVoteKickButton() {
     const playerPanel = $.GetContextPanel();
     const casterID = Players.GetLocalPlayer();
     const target = playerPanel.pID;
-    GameEvents.SendCustomGameEventToServer('votekick_start', {
+    GameEvents.SendCustomGameEventToServer("votekick_start", {
         target,
         casterID,
     });
@@ -40,7 +40,7 @@ function OnVoteFlagButton() {
     const playerPanel = $.GetContextPanel();
     const casterID = Players.GetLocalPlayer();
     const target = playerPanel.pID;
-    GameEvents.SendCustomGameEventToServer('flag_start', {
+    GameEvents.SendCustomGameEventToServer("flag_start", {
         target,
         casterID,
     });
@@ -52,9 +52,9 @@ function OnGiveAllResourcesButton() {
     const target = playerPanel.pID;
     const gold = ui.playerGold[casterID];
     const lumber = ui.playerLumber[casterID];
-    playerPanel.FindChildInLayoutFile('GoldEntry').text = '';
-    playerPanel.FindChildInLayoutFile('LumberEntry').text = '';
-    GameEvents.SendCustomGameEventToServer('give_resources', {
+    playerPanel.FindChildInLayoutFile("GoldEntry").text = "";
+    playerPanel.FindChildInLayoutFile("LumberEntry").text = "";
+    GameEvents.SendCustomGameEventToServer("give_resources", {
         gold,
         lumber,
         target,
@@ -67,9 +67,9 @@ function OnGiveAllGoldButton() {
     const casterID = Players.GetLocalPlayer();
     const target = playerPanel.pID;
     const gold = ui.playerGold[casterID];
-    playerPanel.FindChildInLayoutFile('GoldEntry').text = '';
-    playerPanel.FindChildInLayoutFile('LumberEntry').text = '';
-    GameEvents.SendCustomGameEventToServer('give_resources', {
+    playerPanel.FindChildInLayoutFile("GoldEntry").text = "";
+    playerPanel.FindChildInLayoutFile("LumberEntry").text = "";
+    GameEvents.SendCustomGameEventToServer("give_resources", {
         gold,
         lumber: 0,
         target,
@@ -81,9 +81,9 @@ function OnGiveAllLumberButton() {
     const casterID = Players.GetLocalPlayer();
     const target = playerPanel.pID;
     const lumber = ui.playerLumber[casterID];
-    playerPanel.FindChildInLayoutFile('GoldEntry').text = '';
-    playerPanel.FindChildInLayoutFile('LumberEntry').text = '';
-    GameEvents.SendCustomGameEventToServer('give_resources', {
+    playerPanel.FindChildInLayoutFile("GoldEntry").text = "";
+    playerPanel.FindChildInLayoutFile("LumberEntry").text = "";
+    GameEvents.SendCustomGameEventToServer("give_resources", {
         gold: 0,
         lumber,
         target,
@@ -91,8 +91,8 @@ function OnGiveAllLumberButton() {
     });
 }
 (function () {
-const playerId = $.GetContextPanel().GetAttributeInt('player_id', -1);
-$.GetContextPanel().SetHasClass('player_muted', Game.IsPlayerMuted(playerId));
+const playerId = $.GetContextPanel().GetAttributeInt("player_id", -1);
+$.GetContextPanel().SetHasClass("player_muted", Game.IsPlayerMuted(playerId));
 })();
 
 function FlyoutScoreboard_ShowHero() {

@@ -111,4 +111,4 @@ var DATA_ACHIVEMENTS_LIST =
     },
 
 
-}
+};

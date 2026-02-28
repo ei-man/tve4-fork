@@ -12,35 +12,35 @@ var resourceUi = GameUI.CustomUIConfig();
 
 function OnPlayerLumberChanged(args) {
     // //$.Msg("Player lumber changed: ", args);
-    var playerID = args.playerID;
-    var lumber = args.lumber;
+    const playerID = args.playerID;
+    const lumber = args.lumber;
     resourceUi.playerLumber[playerID] = lumber;
     UpdateLumberValue();
 }
 
 function UpdateLumberValue() {
-    var playerID = Players.GetLocalPlayer();
-    $('#LumberText').text = resourceUi.playerLumber[playerID];
+    const playerID = Players.GetLocalPlayer();
+    $("#LumberText").text = resourceUi.playerLumber[playerID];
 }
 
 function OnPlayerGoldChanged(args) {
     // //$.Msg("Player gold changed: ", args);
-    var playerID = args.playerID;
-    var gold = args.gold;
+    const playerID = args.playerID;
+    const gold = args.gold;
     resourceUi.playerGold[playerID] = gold;
     UpdateGoldValue();
 }
 
 function UpdateGoldValue() {
-    var playerID = Players.GetLocalPlayer();
-    $('#GoldText').text = resourceUi.playerGold[playerID];
+    const playerID = Players.GetLocalPlayer();
+    $("#GoldText").text = resourceUi.playerGold[playerID];
 }
 
 function OnPlayerFoodChanged(args) {
   //  //$.Msg("Player food changed: ", args);
-    var playerID = args.playerID;
-    var food = args.food;
-    var maxFood = args.maxFood;
+    const playerID = args.playerID;
+    const food = args.food;
+    const maxFood = args.maxFood;
     resourceUi.playerFood[playerID] = food;
     resourceUi.playerMaxFood[playerID] = maxFood;
     UpdateFoodValue();
@@ -67,10 +67,10 @@ function OnPlayerMineChanged(args) {
  }
 
 function UpdateFoodValue() {
-    var playerID = Players.GetLocalPlayer();
-    var food = resourceUi.playerFood[playerID];
-    var maxFood = resourceUi.playerMaxFood[playerID];
-    $('#CheeseText').text = food + "/" + maxFood;
+    const playerID = Players.GetLocalPlayer();
+    const food = resourceUi.playerFood[playerID];
+    const maxFood = resourceUi.playerMaxFood[playerID];
+    $("#CheeseText").text = food + "/" + maxFood;
 }
 
 function UpdateWispValue() {
@@ -82,10 +82,10 @@ function UpdateWispValue() {
 
 function OnPlayerLumberPriceChanged(args) 
 {
-    var lumberPrice = args.lumberPrice;
-    var lumberSell = args.lumberSell;
-    $("#ResourceChangeInfoGold").text = "<font color='#FFD74B'>" + lumberPrice + "</font> -> " + "<font color='#23BD33'>10</font>"
-    $("#ResourceChangeInfoLumber").text = "<font color='#23BD33'>10</font>" + " -> <font color='#FFD74B'>" + lumberSell + "</font>"
+    const lumberPrice = args.lumberPrice;
+    const lumberSell = args.lumberSell;
+    $("#ResourceChangeInfoGold").text = "<font color='#FFD74B'>" + lumberPrice + "</font> -> " + "<font color='#23BD33'>10</font>";
+    $("#ResourceChangeInfoLumber").text = "<font color='#23BD33'>10</font>" + " -> <font color='#FFD74B'>" + lumberSell + "</font>";
 }
 
 
@@ -132,10 +132,10 @@ function StopNumberPopupInterval(schedulesArray, entityIndex) {
 
 // -- Customizable version.
 function PopupNumbers(entityIndex, pfx, color, lifetime, number, presymbol, postsymbol) {
-    var pfxPath = "particles/msg_fx/msg_" + pfx + ".vpcf";
-    var pidx = Particles.CreateParticle(pfxPath, ParticleAttachment_t.PATTACH_ABSORIGIN_FOLLOW, entityIndex);
+    const pfxPath = "particles/msg_fx/msg_" + pfx + ".vpcf";
+    const pidx = Particles.CreateParticle(pfxPath, ParticleAttachment_t.PATTACH_ABSORIGIN_FOLLOW, entityIndex);
 
-    var digits = 0;
+    let digits = 0;
     if (number != null) {
         digits = number.toString().length;
     }
@@ -156,9 +156,9 @@ function PlayerPickedHero(args)
     //$.Msg("Player picked hero: ", args);
     // Ignoring args because it doesn't give player id (args.player gives playerID + 1 or is it some user id stuff?)
     // Better be safe and just get local player id.
-    var localId = Players.GetLocalPlayer();
-    var hero = Players.GetPlayerSelectedHero(localId);
-    var panelVisibility = hero === "npc_dota_hero_treant"  ? "visible" : "collapse";
+    const localId = Players.GetLocalPlayer();
+    const hero = Players.GetPlayerSelectedHero(localId);
+    const panelVisibility = hero === "npc_dota_hero_treant"  ? "visible" : "collapse";
     $("#CheesePanel").style.visibility = panelVisibility;
     $("#ChangeResourcePanelFirst").style.visibility = panelVisibility;
     $("#ChangeResourcePanelSecond").style.visibility = panelVisibility;

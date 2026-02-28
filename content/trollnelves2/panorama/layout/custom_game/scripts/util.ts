@@ -3,14 +3,14 @@ function GetDotaHud()
 {
 	let hPanel = $.GetContextPanel();
 
-	while ( hPanel && hPanel.id !== 'Hud')
+	while ( hPanel && hPanel.id !== "Hud")
 	{
         hPanel = hPanel.GetParent();
 	}
 
 	if (!hPanel)
 	{
-        throw new Error('Could not find Hud root from panel with id: ' + $.GetContextPanel().id);
+        throw new Error("Could not find Hud root from panel with id: " + $.GetContextPanel().id);
 	}
 
 	return hPanel;
@@ -22,13 +22,13 @@ function FindDotaHudElement(sId)
 }
 
 function ConvertTimeMinutes(time) {
-    var min = Math.trunc(time / 60);
-    var sec_n = time - 60 * min;
-    var sec = String(Math.trunc(sec_n));
+    const min = Math.trunc(time / 60);
+    const sec_n = time - 60 * min;
+    let sec = String(Math.trunc(sec_n));
 
     if (sec_n < 10) {
-        sec = '0' + sec;
+        sec = "0" + sec;
     }
 
-    return min + ':' + sec;
+    return min + ":" + sec;
 }

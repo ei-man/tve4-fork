@@ -2,7 +2,7 @@
 // Dont use this file for utility functions, dont require it anywhere except custom_ui_manifest
 const TOKEN = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 const MANIFEST_LAYOUT_NAME = $.GetContextPanel().layoutfile;
-let FRAMES = {};
+const FRAMES = {};
 
 /**
  * Subscribes to protected event, checking for token to match current client on every invocation.
@@ -96,7 +96,7 @@ class ProtectedFrame {
  */
 GameEvents.NewProtectedFrame = (context) => {
 	let file_name;
-	if (typeof context == "string") {
+	if (typeof context === "string") {
 		file_name = context;
 	} else {
 		file_name = context.layoutfile;
@@ -113,7 +113,7 @@ GameEvents.NewProtectedFrame = (context) => {
 		current_frame.Release();
 	}
 
-	let frame = new ProtectedFrame(file_name);
+	const frame = new ProtectedFrame(file_name);
 	FRAMES[file_name] = frame;
 	return frame;
 };

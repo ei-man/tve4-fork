@@ -1,11 +1,11 @@
 // @ts-nocheck
-var favourites = new Array();
+var favourites = [];
 var nowrings = 8;
 var selected_sound_current = undefined;
 var nowselect = 0;
-var default_button = null
+var default_button = null;
 
-let Items_sounds = 
+const Items_sounds = 
 [
     [801, "sounds_1"],
     [802, "sounds_2"],
@@ -96,7 +96,7 @@ let Items_sounds =
     [897, "sounds_97"],
 
     
-]
+];
 var player_table: any = CustomNetTables.GetTableValue("Shop", Players.GetLocalPlayer());
 var player_items = player_table && player_table[1] ? player_table[1] : {};
 
@@ -118,7 +118,7 @@ for (var itemType_find of itemTypes)
             continue;
         }
 
-        let current_ring = rings[rings.length - 1];
+        const current_ring = rings[rings.length - 1];
         if (current_ring[0].length < 8)
         {
             current_ring[0].push($.Localize("#" + item_find[1]));
@@ -136,9 +136,9 @@ if (rings[rings.length - 1][0].length < 8)
 {
     for ( var i = rings[rings.length - 1][0].length; i < 8; i++ )
     {
-        rings[rings.length - 1][0].push("")
-        rings[rings.length - 1][1].push(false)
-        rings[rings.length - 1][2].push(0)
+        rings[rings.length - 1][0].push("");
+        rings[rings.length - 1][1].push(false);
+        rings[rings.length - 1][2].push(0);
     }
 }
 
@@ -149,34 +149,34 @@ function StartWheel()
     $("#Bubble").visible = true;
     $("#PhrasesContainer").visible = true;
     $("#ChangeWheelButtons").visible = true;
-    $("#ChangeWheelButtonLabel").text = (nowselect + 1) + " / " + rings.length 
+    $("#ChangeWheelButtonLabel").text = (nowselect + 1) + " / " + rings.length; 
     $("#PhrasesContainer").RemoveAndDeleteChildren();
 
-    for ( var i = 0; i < 8; i++ )
+    for ( let i = 0; i < 8; i++ )
     {
-        $.CreatePanel(`Button`, $("#PhrasesContainer"), `Phrase${i}`, {
-            class: `MyPhrases`,
+        $.CreatePanel("Button", $("#PhrasesContainer"), `Phrase${i}`, {
+            class: "MyPhrases",
             onmouseover: `OnMouseOver(${i})`,
             onmouseout: `OnMouseOut(${i})`,
         });
         $("#Phrase"+i).BLoadLayoutSnippet("Phrase");
         $("#Phrase"+i).GetChild(0).GetChild(0).visible = rings[0][1][i];
-        var phase_deactive = false
+        const phase_deactive = false;
 
         
         if (rings[nowselect][1][i] == false)
             {
-            $("#Phrase"+i).style.visibility = "collapse"
+            $("#Phrase"+i).style.visibility = "collapse";
         } else {
-            $("#Phrase"+i).style.visibility = "visible"
+            $("#Phrase"+i).style.visibility = "visible";
         }
 
         $("#Phrase"+i).GetChild(0).GetChild(0).text = $.Localize(rings[nowselect][0][i]);
 
         if (phase_deactive) {   
-            var blocked = $.CreatePanel("Panel", $("#Phrase"+i).GetChild(0), "" );
+            const blocked = $.CreatePanel("Panel", $("#Phrase"+i).GetChild(0), "" );
             blocked.AddClass("BlockChatWheel");
-            $("#Phrase"+i).GetChild(0).style.washColor = "red"
+            $("#Phrase"+i).GetChild(0).style.washColor = "red";
         }
     }
 }
@@ -185,38 +185,38 @@ function LeftButton()
 {
     if (nowselect - 1 < 0)
     {
-        nowselect = rings.length - 1
+        nowselect = rings.length - 1;
     } else {
-        nowselect = nowselect - 1
+        nowselect = nowselect - 1;
     }
-    $("#ChangeWheelButtonLabel").text = (nowselect + 1) + " / " + rings.length
+    $("#ChangeWheelButtonLabel").text = (nowselect + 1) + " / " + rings.length;
     $("#PhrasesContainer").RemoveAndDeleteChildren();
-    for ( var i = 0; i < 8; i++ )
+    for ( let i = 0; i < 8; i++ )
     {
-        let properities_for_panel = {
-            class: `MyPhrases`,
+        const properities_for_panel = {
+            class: "MyPhrases",
             onmouseover: `OnMouseOver(${i})`,
             onmouseout: `OnMouseOut(${i})`,
         };
 
-        $.CreatePanel(`Button`, $("#PhrasesContainer"), `Phrase${i}`, properities_for_panel);
+        $.CreatePanel("Button", $("#PhrasesContainer"), `Phrase${i}`, properities_for_panel);
         $("#Phrase"+i).BLoadLayoutSnippet("Phrase");
-        var phase_deactive = false
+        const phase_deactive = false;
 
 
             if (rings[nowselect][1][i] == false)
             {
-            $("#Phrase"+i).style.visibility = "collapse"
+            $("#Phrase"+i).style.visibility = "collapse";
             } else {
-            $("#Phrase"+i).style.visibility = "visible"
+            $("#Phrase"+i).style.visibility = "visible";
             }
 
         $("#Phrase"+i).GetChild(0).GetChild(0).text = $.Localize(rings[nowselect][0][i]);
 
         if (phase_deactive) {   
-            var blocked = $.CreatePanel("Panel", $("#Phrase"+i).GetChild(0), "" );
+            const blocked = $.CreatePanel("Panel", $("#Phrase"+i).GetChild(0), "" );
             blocked.AddClass("BlockChatWheel");
-            $("#Phrase"+i).GetChild(0).style.washColor = "red"
+            $("#Phrase"+i).GetChild(0).style.washColor = "red";
         }
     }
 }
@@ -225,38 +225,38 @@ function RightButton()
 {
     if (nowselect + 1 > (rings.length - 1))
     {
-        nowselect = 0
+        nowselect = 0;
     } else {
-        nowselect = nowselect + 1
+        nowselect = nowselect + 1;
     }
-    $("#ChangeWheelButtonLabel").text = (nowselect + 1) + " / " + rings.length
+    $("#ChangeWheelButtonLabel").text = (nowselect + 1) + " / " + rings.length;
     $("#PhrasesContainer").RemoveAndDeleteChildren();
-    for ( var i = 0; i < 8; i++ )
+    for ( let i = 0; i < 8; i++ )
     {
-        let properities_for_panel = {
-            class: `MyPhrases`,
+        const properities_for_panel = {
+            class: "MyPhrases",
             onmouseover: `OnMouseOver(${i})`,
             onmouseout: `OnMouseOut(${i})`,
         };
 
-        $.CreatePanel(`Button`, $("#PhrasesContainer"), `Phrase${i}`, properities_for_panel);
+        $.CreatePanel("Button", $("#PhrasesContainer"), `Phrase${i}`, properities_for_panel);
         $("#Phrase"+i).BLoadLayoutSnippet("Phrase");
-        var phase_deactive = false
+        const phase_deactive = false;
 
 
             if (rings[nowselect][1][i] == false)
             {
-            $("#Phrase"+i).style.visibility = "collapse"
+            $("#Phrase"+i).style.visibility = "collapse";
             } else {
-            $("#Phrase"+i).style.visibility = "visible"
+            $("#Phrase"+i).style.visibility = "visible";
             }
 
         $("#Phrase"+i).GetChild(0).GetChild(0).text = $.Localize(rings[nowselect][0][i]);
 
         if (phase_deactive) {   
-            var blocked = $.CreatePanel("Panel", $("#Phrase"+i).GetChild(0), "" );
+            const blocked = $.CreatePanel("Panel", $("#Phrase"+i).GetChild(0), "" );
             blocked.AddClass("BlockChatWheel");
-            $("#Phrase"+i).GetChild(0).style.washColor = "red"
+            $("#Phrase"+i).GetChild(0).style.washColor = "red";
         }
     }
 }
@@ -266,7 +266,7 @@ function StopWheel() {
     $("#Bubble").visible = false;
     $("#PhrasesContainer").visible = false;
     $("#ChangeWheelButtons").visible = false;
-    var newnum = rings[nowselect][2][selected_sound_current];
+    const newnum = rings[nowselect][2][selected_sound_current];
     if (rings[nowselect][1][selected_sound_current])
     {
         GameEvents.SendCustomGameEventToServer("SelectVO", {num: Number(newnum)});
@@ -278,10 +278,10 @@ function OnMouseOver(num) {
     selected_sound_current = num;
     $( "#WheelPointer" ).RemoveClass( "Hidden" );
     $( "#Arrow" ).RemoveClass( "Hidden" );
-    for ( var i = 0; i < 8; i++ )
+    for ( let i = 0; i < 8; i++ )
     {
         if ($("#Wheel").BHasClass("ForWheel"+i))
-            $( "#Wheel" ).RemoveClass( "ForWheel"+i );
+            {$( "#Wheel" ).RemoveClass( "ForWheel"+i );}
     }
     $( "#Wheel" ).AddClass( "ForWheel"+num );
 }
@@ -320,7 +320,7 @@ const english_language_button =
     "b" : "и",
     "n" : "т",
     "m" : "ь",
-}
+};
 
 const russian_language_button = 
 {
@@ -350,29 +350,29 @@ const russian_language_button =
     "и" : "b",
     "т" : "n",
     "ь" : "m",
-}
+};
  
 function SetKeyBindChatWheel()
 {
-    let original_keybind = "L".toLowerCase()
+    let original_keybind = "L".toLowerCase();
     if (default_button != original_keybind ) 
     {
         if (original_keybind == "")
         {
-            original_keybind = "L"
+            original_keybind = "L";
         }
-        original_keybind = original_keybind.toLowerCase()
+        original_keybind = original_keybind.toLowerCase();
         if (russian_language_button[original_keybind])
         {
-            original_keybind = russian_language_button[original_keybind]
+            original_keybind = russian_language_button[original_keybind];
         }
-        CreateKeyBind(original_keybind)
+        CreateKeyBind(original_keybind);
         if (english_language_button[original_keybind])
         {
-            CreateKeyBind(english_language_button[original_keybind])  
+            CreateKeyBind(english_language_button[original_keybind]);  
         }
-        default_button = original_keybind
-        GameUI.CustomUIConfig().button_with_wheel = original_keybind.toUpperCase()
+        default_button = original_keybind;
+        GameUI.CustomUIConfig().button_with_wheel = original_keybind.toUpperCase();
     } 
     $.Schedule( 1, SetKeyBindChatWheel );
 }
@@ -392,7 +392,7 @@ function GetGameKeybind(command)
 
 (function() {
 	GameUI.CustomUIConfig().chatWheelLoaded = true;
-    SetKeyBindChatWheel()
+    SetKeyBindChatWheel();
     $("#Wheel").visible = false;
     $("#Bubble").visible = false;
     $("#PhrasesContainer").visible = false;

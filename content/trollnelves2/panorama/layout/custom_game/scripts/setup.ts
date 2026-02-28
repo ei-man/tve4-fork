@@ -27,7 +27,7 @@ var uiWaitingSchedules = [];
     
 
     // These lines set up the panorama colors used by each team (for game select/setup, etc)
-    GameUI.CustomUIConfig().team_colors = {}
+    GameUI.CustomUIConfig().team_colors = {};
     GameUI.CustomUIConfig().team_colors[DOTATeam_t.DOTA_TEAM_GOODGUYS] = "#B8FF45;";
     GameUI.CustomUIConfig().team_colors[DOTATeam_t.DOTA_TEAM_BADGUYS]  = "#FF6161;";
     GameUI.CustomUIConfig().team_colors[DOTATeam_t.DOTA_TEAM_CUSTOM_1] = "#ffffff;";
@@ -42,11 +42,11 @@ var uiWaitingSchedules = [];
     GameUI.CustomUIConfig().team_colors[DOTATeam_t.DOTA_TEAM_NEUTRALS] = "#ffffff;";
     GameUI.CustomUIConfig().team_colors[-1]                            = "#ffffff;";
 
-    var tooltipManager = $.GetContextPanel().GetParent().GetParent().FindChildTraverse("Tooltips");
+    const tooltipManager = $.GetContextPanel().GetParent().GetParent().FindChildTraverse("Tooltips");
     tooltipManager.AddClass("CustomTooltipStyle");
 
-    var newUI = $.GetContextPanel().GetParent().GetParent().FindChildTraverse("HUDElements");
-    var centerBlock = newUI.FindChildTraverse("center_block");
+    const newUI = $.GetContextPanel().GetParent().GetParent().FindChildTraverse("HUDElements");
+    const centerBlock = newUI.FindChildTraverse("center_block");
 
    // newUI.FindChildTraverse("GlyphScanContainer").style.visibility = "collapse";
 
@@ -92,13 +92,13 @@ var uiWaitingSchedules = [];
   //  backpack.style.visibility = "collapse";
     //Add resource panel instead of backpack 
 
-    var main_hud_for_resource = centerBlock.FindChildTraverse("SecondaryAbilityContainer")
+    const main_hud_for_resource = centerBlock.FindChildTraverse("SecondaryAbilityContainer");
 
 
-    var resourcePanel = $.CreatePanel("Panel", main_hud_for_resource, "");
+    const resourcePanel = $.CreatePanel("Panel", main_hud_for_resource, "");
     resourcePanel.BLoadLayout("file://{resources}/layout/custom_game/resource/resource.xml", false, false);
 
-    var healthContainer = centerBlock.FindChildTraverse("HealthContainer");
+    const healthContainer = centerBlock.FindChildTraverse("HealthContainer");
     InitializeCustomHpRegenLabel(healthContainer);
     healthContainer.FindChildTraverse("HealthRegenLabel").style.visibility = "collapse";
   //  var manaContainer = centerBlock.FindChildTraverse("ManaContainer");
@@ -142,7 +142,7 @@ function InitializeCustomHpRegenLabel(healthContainer) {
 }
 
 function UpdateHpRegLabel() {
-    var localHero = Players.GetLocalPlayerPortraitUnit();
+    const localHero = Players.GetLocalPlayerPortraitUnit();
     customHealthRegenLabel.text = "+" + parseFloat(Entities.GetHealthThinkRegen(localHero) + (customHpReg[localHero] || 0)).toFixed(2);
 }
 
@@ -168,7 +168,7 @@ function SetupUnusedItemHotkeys() {
     itemHotkeys.push(GetKeyBind("InventoryNeutral"));
     //$.Msg("Setup unused item hotkeys");
     for (var i = 0; i < itemHotkeys.length; i++) {
-        var hotkey = itemHotkeys[i];
+        const hotkey = itemHotkeys[i];
         const cmd_name = hotkey + Math.floor(Math.random() * 99999999);
         (function (hotkey, slot) {
             Game.AddCommand("UseHotkey_" + cmd_name, function (data) {
@@ -183,16 +183,16 @@ function SetupUnusedItemHotkeys() {
 
 function UseItemCommandCalled(data, hotkey, slot) {
    // //$.Msg("Use item command called: ", data, "; ", hotkey, "; ");
-    var selectedUnitID = Players.GetLocalPlayerPortraitUnit();
-    var itemID = Entities.GetItemInSlot(selectedUnitID, slot);
-    var abilitySlot = unusedHotkeyAbilitySlots[hotkey];
+    const selectedUnitID = Players.GetLocalPlayerPortraitUnit();
+    const itemID = Entities.GetItemInSlot(selectedUnitID, slot);
+    const abilitySlot = unusedHotkeyAbilitySlots[hotkey];
    // //$.Msg("ItemID: ", itemID);
-    let itemName = Abilities.GetAbilityName(itemID);
+    const itemName = Abilities.GetAbilityName(itemID);
     if (itemID !== -1 && (itemName != "item_full" && itemName != "item_anti_angel")) {
         //$.Msg("itemName: ", itemName);
         Abilities.ExecuteAbility(itemID, selectedUnitID, false);
     } else if (abilitySlot != null) {
-        var abilityID = Entities.GetAbility(selectedUnitID, abilitySlot);
+        const abilityID = Entities.GetAbility(selectedUnitID, abilitySlot);
         Abilities.ExecuteAbility(abilityID, selectedUnitID, false);
     }
 }
@@ -201,12 +201,12 @@ function UpdateAbilityTooltips() {
     ////$.Msg("UpdateAbilityTooltips");
     CleanUpUiSchedules();
     const abilityListPanel = $.GetContextPanel().GetParent().GetParent().FindChildTraverse("HUDElements").FindChildTraverse("abilities");
-    var selectedUnit = Players.GetLocalPlayerPortraitUnit();
+    const selectedUnit = Players.GetLocalPlayerPortraitUnit();
     ////$.Msg("Selected unit: ", selectedUnit);
-    var x = {nextHotkeyIndex: 0};
+    const x = {nextHotkeyIndex: 0};
     unusedHotkeyAbilitySlots = [];
-    for (var i = 0; i < 16; i++) {
-        var abilityID = Entities.GetAbility(selectedUnit, i);
+    for (let i = 0; i < 16; i++) {
+        const abilityID = Entities.GetAbility(selectedUnit, i);
         if (abilityID === -1) {
           //   continue;
         }
@@ -217,7 +217,7 @@ function UpdateAbilityTooltips() {
         waitForValveUI(i, 0);
 
         function waitForValveUI(abilitySlot, tries) {
-            var abilityPanel = abilityListPanel.FindChildTraverse("Ability" + abilitySlot);
+            const abilityPanel = abilityListPanel.FindChildTraverse("Ability" + abilitySlot);
             if (abilityPanel == null) {
                 if (tries < 3) {
                     uiWaitingSchedules.push($.Schedule(0.1, function () {
@@ -227,113 +227,113 @@ function UpdateAbilityTooltips() {
                 return;
             }
 
-            var abilityName = Abilities.GetAbilityName(Entities.GetAbility(selectedUnit, abilitySlot));
+            const abilityName = Abilities.GetAbilityName(Entities.GetAbility(selectedUnit, abilitySlot));
 
-            var buttonWell = abilityPanel.FindChildTraverse("ButtonWell");
+            const buttonWell = abilityPanel.FindChildTraverse("ButtonWell");
             abilityPanel.SetPanelEvent("onmouseover", (function (index, tooltipParent) {
                 return function () {
-                    var base = $.GetContextPanel().GetParent().GetParent().GetParent();
-                    var tooltipManager = base.FindChildTraverse('Tooltips');
-                    var upgradedUnitName = CustomNetTables.GetTableValue("buildings", abilityName) && CustomNetTables.GetTableValue("buildings", abilityName).upgradeUnitName || "";
-                    var requirementsObject = upgradedUnitName.length > 0 && CustomNetTables.GetTableValue("buildings", (Players.GetLocalPlayer() + upgradedUnitName)) || {};
-                    var requirementKeys = Object.keys(requirementsObject);
-                    var reqText = "";
+                    const base = $.GetContextPanel().GetParent().GetParent().GetParent();
+                    const tooltipManager = base.FindChildTraverse("Tooltips");
+                    const upgradedUnitName = CustomNetTables.GetTableValue("buildings", abilityName) && CustomNetTables.GetTableValue("buildings", abilityName).upgradeUnitName || "";
+                    const requirementsObject = upgradedUnitName.length > 0 && CustomNetTables.GetTableValue("buildings", (Players.GetLocalPlayer() + upgradedUnitName)) || {};
+                    const requirementKeys = Object.keys(requirementsObject);
+                    let reqText = "";
                     ////$.Msg(requirementsObject)
-                    var repair = null;
+                    let repair = null;
 
                     if (abilityName && (abilityName.indexOf("repair") > -1 || abilityName.indexOf("train") > -1)) {
                         repair = CustomNetTables.GetTableValue("abilities", abilityName.substr(6)) || 
                                 CustomNetTables.GetTableValue("abilities", Entities.GetUnitName(selectedUnit));
                     }
 
-                    var repair_speed = repair && repair.speed || 0;
+                    const repair_speed = repair && repair.speed || 0;
 
                     if (repair_speed > 0) {
-                        const desc = tooltipManager.FindChildTraverse('AbilityExtraDescription');
+                        const desc = tooltipManager.FindChildTraverse("AbilityExtraDescription");
                         desc.style.visibility = "visible";
                         desc.style.color = "#A52A2A";
-                        desc.style.fontSize = '18px';
+                        desc.style.fontSize = "18px";
                         desc.text = "Repair speed: " + repair_speed;
                     }
                     
-                    var gold_gain = upgradedUnitName.length > 0 && CustomNetTables.GetTableValue("buildings", upgradedUnitName) && CustomNetTables.GetTableValue("buildings", upgradedUnitName).gold_gain || 0;
-                    var gold_interval = upgradedUnitName.length > 0 && CustomNetTables.GetTableValue("buildings", upgradedUnitName) && CustomNetTables.GetTableValue("buildings", upgradedUnitName).gold_interval || 0;
-                    var textGold = "Gold Amount: " + gold_gain || "";
+                    const gold_gain = upgradedUnitName.length > 0 && CustomNetTables.GetTableValue("buildings", upgradedUnitName) && CustomNetTables.GetTableValue("buildings", upgradedUnitName).gold_gain || 0;
+                    const gold_interval = upgradedUnitName.length > 0 && CustomNetTables.GetTableValue("buildings", upgradedUnitName) && CustomNetTables.GetTableValue("buildings", upgradedUnitName).gold_interval || 0;
+                    const textGold = "Gold Amount: " + gold_gain || "";
                     if (gold_gain > 0 )
                     {
-                        tooltipManager.FindChildTraverse('AbilityExtraDescription').style.visibility = gold_gain > 0 ? "visible" : "collapse";
-                        tooltipManager.FindChildTraverse('AbilityExtraDescription').style.color = "#FFFF00";
-                        tooltipManager.FindChildTraverse('AbilityExtraDescription').style.fontSize = '18px';
-                        tooltipManager.FindChildTraverse('AbilityExtraDescription').text = textGold;
+                        tooltipManager.FindChildTraverse("AbilityExtraDescription").style.visibility = gold_gain > 0 ? "visible" : "collapse";
+                        tooltipManager.FindChildTraverse("AbilityExtraDescription").style.color = "#FFFF00";
+                        tooltipManager.FindChildTraverse("AbilityExtraDescription").style.fontSize = "18px";
+                        tooltipManager.FindChildTraverse("AbilityExtraDescription").text = textGold;
                     }
-                    var harvestAbility = (abilityName && CustomNetTables.GetTableValue("abilities", abilityName.substr(6))) || (selectedUnit && CustomNetTables.GetTableValue("abilities", Entities.GetUnitName(selectedUnit)));
-                    var lumber_interval = harvestAbility && harvestAbility.lumber_interval || 0;
-                    var lumber_amount = harvestAbility && harvestAbility.amount || 0;
-                    var textLumer = "Gather interval: " + lumber_interval || "" ;
+                    const harvestAbility = (abilityName && CustomNetTables.GetTableValue("abilities", abilityName.substr(6))) || (selectedUnit && CustomNetTables.GetTableValue("abilities", Entities.GetUnitName(selectedUnit)));
+                    const lumber_interval = harvestAbility && harvestAbility.lumber_interval || 0;
+                    const lumber_amount = harvestAbility && harvestAbility.amount || 0;
+                    let textLumer = "Gather interval: " + lumber_interval || "" ;
                     textLumer = textLumer + "<br>Lumber amount: " + lumber_amount || "";
                     if (lumber_interval > 0)
                     {
-                        tooltipManager.FindChildTraverse('AbilityExtraDescription').style.visibility = lumber_interval > 0 ? "visible" : "collapse";
-                        tooltipManager.FindChildTraverse('AbilityExtraDescription').style.color = "#008000";
-                        tooltipManager.FindChildTraverse('AbilityExtraDescription').style.fontSize = '18px';
-                        tooltipManager.FindChildTraverse('AbilityExtraDescription').text = textLumer;
+                        tooltipManager.FindChildTraverse("AbilityExtraDescription").style.visibility = lumber_interval > 0 ? "visible" : "collapse";
+                        tooltipManager.FindChildTraverse("AbilityExtraDescription").style.color = "#008000";
+                        tooltipManager.FindChildTraverse("AbilityExtraDescription").style.fontSize = "18px";
+                        tooltipManager.FindChildTraverse("AbilityExtraDescription").text = textLumer;
                     } 
 
                     if (requirementKeys.length > 0) {
                         reqText = reqText + "Requirements:";
                     }
-                    for (var requirementKey of requirementKeys) {
+                    for (const requirementKey of requirementKeys) {
                         reqText = reqText + " <br>  " + $.Localize("#" + requirementsObject[requirementKey][1]);
                         if (requirementsObject[requirementKey][2] > 1)
-                            reqText = reqText + "  -  " + requirementsObject[requirementKey][2];
+                            {reqText = reqText + "  -  " + requirementsObject[requirementKey][2];}
                     } 
                     if (reqText != "")
                     {
-                        tooltipManager.FindChildTraverse('AbilityExtraDescription').style.visibility = reqText != "" ? "visible" : "collapse";
-                        tooltipManager.FindChildTraverse('AbilityExtraDescription').style.color = "#FFA500";
-                        tooltipManager.FindChildTraverse('AbilityExtraDescription').style.fontSize = '18px';
-                        tooltipManager.FindChildTraverse('AbilityExtraDescription').text = reqText;
+                        tooltipManager.FindChildTraverse("AbilityExtraDescription").style.visibility = reqText != "" ? "visible" : "collapse";
+                        tooltipManager.FindChildTraverse("AbilityExtraDescription").style.color = "#FFA500";
+                        tooltipManager.FindChildTraverse("AbilityExtraDescription").style.fontSize = "18px";
+                        tooltipManager.FindChildTraverse("AbilityExtraDescription").text = reqText;
                     }
-                    tooltipManager.FindChildTraverse('SellPriceLabel').style.visibility = "collapse";
+                    tooltipManager.FindChildTraverse("SellPriceLabel").style.visibility = "collapse";
                     //if (tooltipManager.FindChildTraverse('SellPriceLabel').style.visibility == "visible")
                     //{
                     //    tooltipManager.FindChildTraverse('SellPriceLabel').text = $.Localize("#cost_money_sell_item");
                     //}
                     
-                    tooltipManager.FindChildTraverse('SellPriceTimeLabel').style.visibility = "collapse";
-                }
+                    tooltipManager.FindChildTraverse("SellPriceTimeLabel").style.visibility = "collapse";
+                };
             })(abilitySlot, buttonWell));
             abilityPanel.SetPanelEvent("onmouseout",
                 function () {
-                    var base = $.GetContextPanel().GetParent().GetParent().GetParent();
-                    var tooltipManager = base.FindChildTraverse('Tooltips');
-                    tooltipManager.FindChildTraverse('AbilityExtraDescription').style.visibility = "collapse";
+                    const base = $.GetContextPanel().GetParent().GetParent().GetParent();
+                    const tooltipManager = base.FindChildTraverse("Tooltips");
+                    tooltipManager.FindChildTraverse("AbilityExtraDescription").style.visibility = "collapse";
                 });
-            var buttonSize = buttonWell.FindChildTraverse("ButtonSize");
+            const buttonSize = buttonWell.FindChildTraverse("ButtonSize");
 
-            var upgradedUnitName = CustomNetTables.GetTableValue("buildings", abilityName) && CustomNetTables.GetTableValue("buildings", abilityName).upgradeUnitName || "";
-            var building = selectedUnit && CustomNetTables.GetTableValue("buildings", Entities.GetUnitName(selectedUnit));
-            var resources = (building && upgradedUnitName.length > 0 && building[upgradedUnitName]) || CustomNetTables.GetTableValue("buildings", abilityName) || CustomNetTables.GetTableValue("abilities", abilityName);
-            var gold_cost = 0;
-            var lumber_cost = 0;
+            const upgradedUnitName = CustomNetTables.GetTableValue("buildings", abilityName) && CustomNetTables.GetTableValue("buildings", abilityName).upgradeUnitName || "";
+            const building = selectedUnit && CustomNetTables.GetTableValue("buildings", Entities.GetUnitName(selectedUnit));
+            const resources = (building && upgradedUnitName.length > 0 && building[upgradedUnitName]) || CustomNetTables.GetTableValue("buildings", abilityName) || CustomNetTables.GetTableValue("abilities", abilityName);
+            let gold_cost = 0;
+            let lumber_cost = 0;
 
             if (resources) {
                 gold_cost = resources.gold_cost || 0;
                 lumber_cost = resources.lumber_cost || 0;
             } else {
-                var item = CustomNetTables.GetTableValue("items", "buy_" + abilityName) || CustomNetTables.GetTableValue("items", abilityName);
+                const item = CustomNetTables.GetTableValue("items", "buy_" + abilityName) || CustomNetTables.GetTableValue("items", abilityName);
                 gold_cost = item && item.gold_cost || 0;
                 lumber_cost = item && item.lumber_cost || 0;
             }
 
-            var healthCostElement = buttonSize.FindChildTraverse("HealthCost");
+            const healthCostElement = buttonSize.FindChildTraverse("HealthCost");
             healthCostElement.style.visibility = "collapse";
             
-            var goldCostElement = buttonSize.FindChildTraverse("GoldCost");
+            const goldCostElement = buttonSize.FindChildTraverse("GoldCost");
             goldCostElement.style.visibility = gold_cost > 0 ? "visible" : "collapse";
             goldCostElement.text = gold_cost;
            // goldCostElement.style.textShadow = "1px 1px 1px 3.0 #000000";
-            var manaCostElement = buttonSize.FindChildTraverse("ManaCost");
+            const manaCostElement = buttonSize.FindChildTraverse("ManaCost");
             manaCostElement.style.visibility = lumber_cost > 0 ? "visible" : "collapse";
             manaCostElement.style.marginRight = "0px";
             manaCostElement.style.marginBottom = "14px";
@@ -358,18 +358,18 @@ function UpdateAbilityTooltips() {
 function UpdateItemTooltips() {
     ////$.Msg("UpdateItemTooltips");
     const inventoryListContainer = $.GetContextPanel().GetParent().GetParent().FindChildTraverse("HUDElements").FindChildTraverse("inventory_list_container");
-    for (var i = 0; i < 6; i++) {
-        var inventoryPanel = inventoryListContainer.FindChildTraverse("inventory_slot_" + i);
+    for (let i = 0; i < 6; i++) {
+        const inventoryPanel = inventoryListContainer.FindChildTraverse("inventory_slot_" + i);
         if (inventoryPanel != null) {
-            var buttonWell = inventoryPanel.FindChildTraverse("ButtonWell");
+            const buttonWell = inventoryPanel.FindChildTraverse("ButtonWell");
             inventoryPanel.SetPanelEvent("onmouseover", (function (index, tooltipParent, inventoryPanel) {
                 return function () {
-                    var base = $.GetContextPanel().GetParent().GetParent().GetParent();
-                    var tooltipManager = base.FindChildTraverse('Tooltips');
-                    tooltipManager.FindChildTraverse('SellPriceLabel').style.visibility = "visible";
-                    tooltipManager.FindChildTraverse('SellPriceLabel').text = $.Localize("#cost_money_sell_item");
-                    tooltipManager.FindChildTraverse('SellPriceTimeLabel').style.visibility = "collapse";
-                }
+                    const base = $.GetContextPanel().GetParent().GetParent().GetParent();
+                    const tooltipManager = base.FindChildTraverse("Tooltips");
+                    tooltipManager.FindChildTraverse("SellPriceLabel").style.visibility = "visible";
+                    tooltipManager.FindChildTraverse("SellPriceLabel").text = $.Localize("#cost_money_sell_item");
+                    tooltipManager.FindChildTraverse("SellPriceTimeLabel").style.visibility = "collapse";
+                };
             })(i, buttonWell, inventoryPanel));
         }
     }
@@ -384,13 +384,13 @@ function UpdateAbilityCustomHotkeys() {
     CleanUpUiSchedules();
     ////$.Msg("UpdateAbilityCustomHotkeys");
     const abilityListPanel = $.GetContextPanel().GetParent().GetParent().FindChildTraverse("HUDElements").FindChildTraverse("abilities");
-    var selectedUnit = Players.GetLocalPlayerPortraitUnit();
+    const selectedUnit = Players.GetLocalPlayerPortraitUnit();
     ////$.Msg("Selected unit: ", selectedUnit);
-    var x = {nextHotkeyIndex: 0};
+    const x = {nextHotkeyIndex: 0};
     unusedHotkeyAbilitySlots = [];
-    var abilityCount = Entities.GetAbilityCount(selectedUnit);
-    for (var i = 6; i < abilityCount; i++) {
-        var abilityID = Entities.GetAbility(selectedUnit, i);
+    const abilityCount = Entities.GetAbilityCount(selectedUnit);
+    for (let i = 6; i < abilityCount; i++) {
+        const abilityID = Entities.GetAbility(selectedUnit, i);
         if (abilityID === -1) {
             break;
         }
@@ -401,7 +401,7 @@ function UpdateAbilityCustomHotkeys() {
         waitForValveUI(i, 0);
 
         function waitForValveUI(abilitySlot, tries) {
-            var abilityPanel = abilityListPanel.FindChildTraverse("Ability" + abilitySlot);
+            const abilityPanel = abilityListPanel.FindChildTraverse("Ability" + abilitySlot);
             if (abilityPanel == null) {
                 if (tries < 3) {
                     uiWaitingSchedules.push($.Schedule(0.1, function () {
@@ -416,15 +416,15 @@ function UpdateAbilityCustomHotkeys() {
 }
 
 function UpdateAbilityCustomHotkey(selectedUnit, abilitySlot, abilityPanel, x) {
-    var hotkey = null;
+    let hotkey = null;
     while (hotkey == null && x.nextHotkeyIndex < itemHotkeys.length) {
         if (IsHotkeyAvailable(selectedUnit, x.nextHotkeyIndex)) {
             hotkey = itemHotkeys[x.nextHotkeyIndex];
         }
         x.nextHotkeyIndex = x.nextHotkeyIndex + 1;
     }
-    var foundFreeItemHotkey = hotkey != null;
-    var hotkeyPanel = abilityPanel.FindChildTraverse("HotkeyContainer").FindChildTraverse("Hotkey");
+    const foundFreeItemHotkey = hotkey != null;
+    const hotkeyPanel = abilityPanel.FindChildTraverse("HotkeyContainer").FindChildTraverse("Hotkey");
     hotkeyPanel.SetHasClass("no_hotkey", !foundFreeItemHotkey);
     hotkeyPanel.style.visibility = foundFreeItemHotkey ? "visible" : "collapse";
     hotkeyPanel.FindChild("HotkeyText").text = foundFreeItemHotkey ? hotkey : "hotkey";
@@ -438,8 +438,8 @@ function IsHotkeyAvailable(selectedUnit, index) {
     if (index === 0) {
         return true;
     }
-    let itemID = Entities.GetItemInSlot(selectedUnit, index - 1)
-    let itemName = Abilities.GetAbilityName(itemID);
+    const itemID = Entities.GetItemInSlot(selectedUnit, index - 1);
+    const itemName = Abilities.GetAbilityName(itemID);
     if (itemName == "item_full" || itemName == "item_anti_angel" )
     {
         return true;
@@ -448,7 +448,7 @@ function IsHotkeyAvailable(selectedUnit, index) {
 }
 
 function CleanUpUiSchedules() {
-    for (var a = 0; a < uiWaitingSchedules.length; a++) {
+    for (let a = 0; a < uiWaitingSchedules.length; a++) {
         try {
        //     //$.Msg("Canceling schedule: ", uiWaitingSchedules[a]);
             $.CancelScheduled(uiWaitingSchedules[a]);
@@ -464,7 +464,7 @@ function CleanUpUiSchedules() {
 function GetKeyBind(name) {
     const context_panel = $.GetContextPanel();
     //context_panel.BCreateChildren('<DOTAHotkey keybind="' + name + '" />');
-    $.CreatePanel("DOTAHotkey", context_panel, "", { keybind: name})
+    $.CreatePanel("DOTAHotkey", context_panel, "", { keybind: name});
     const key_element = context_panel.GetChild(context_panel.GetChildCount() - 1);
     key_element.DeleteAsync(0);
 
@@ -473,6 +473,6 @@ function GetKeyBind(name) {
 
 
 function HidePickScreen() {
-    var dotaHud = $.GetContextPanel().GetParent().GetParent();
+    const dotaHud = $.GetContextPanel().GetParent().GetParent();
     dotaHud.FindChild("PreGame").visible = false;
 }

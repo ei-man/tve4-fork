@@ -22,14 +22,14 @@ function WorldPanelChange(id, changes, dels)
 {
   ////$.Msg("change ", id, ' -- ', changes, ' -- ', dels);
   for (var k in changes){
-    var wp = panels[k];
+    let wp = panels[k];
     if (!wp){
       wp = {};
       panels[k] = wp;
     }
     if (changes[k].layout !== wp.layout){
       if (wp.panel)
-        wp.panel.DeleteAsync(0);
+        {wp.panel.DeleteAsync(0);}
 
       wp.panel = $.CreatePanel( "Panel", $.GetContextPanel(), "" );
       wp.panel.BLoadLayout(changes[k].layout, false, false);
@@ -41,14 +41,14 @@ function WorldPanelChange(id, changes, dels)
         return function(){
           pan.DeleteAsync(0);
           delete panels[k];
-        }
+        };
       }(wp.panel);
     }
 
-    for (var j in changes[k]){
+    for (const j in changes[k]){
       if (j == "position"){
-        wp[j] = changes[k][j].split(' ');
-        wp[j] = [parseFloat(wp[j][0]), parseFloat(wp[j][1]), parseFloat(wp[j][2])]
+        wp[j] = changes[k][j].split(" ");
+        wp[j] = [parseFloat(wp[j][0]), parseFloat(wp[j][1]), parseFloat(wp[j][2])];
       }
       else if (j == "data"){
         wp.panel.Data = changes[k][j];
@@ -58,7 +58,7 @@ function WorldPanelChange(id, changes, dels)
         wp[j] = changes[k][j];
       }
       else
-        wp[j] = changes[k][j];
+        {wp[j] = changes[k][j];}
     }
     
     //wp.dirty = true;
@@ -81,8 +81,8 @@ function WorldPanelChange(id, changes, dels)
 function PositionPanels()
 {
   ////$.Msg(Object.keys(panels).length);
-  for (var k in panels){
-    var wp = panels[k];
+  for (const k in panels){
+    const wp = panels[k];
     var pos = wp.position;
     if (!pos){
       if (!Entities.IsValidEntity(wp.entity)){
@@ -110,20 +110,20 @@ function PositionPanels()
     }
 
 
-      var origin = Entities.GetAbsOrigin(wp.entity);
+      const origin = Entities.GetAbsOrigin(wp.entity);
       var pos = [Game.WorldToScreenX(origin[0],origin[1],origin[2]),Game.WorldToScreenY(origin[0],origin[1],origin[2])];
 
-      var w = Game.GetScreenWidth();
-      var h = Game.GetScreenHeight();
-      var main = wp.panel;
+      const w = Game.GetScreenWidth();
+      const h = Game.GetScreenHeight();
+      const main = wp.panel;
 
       if( pos[0] > w || pos[0] < 0 || pos[1] > h || pos[1] < 0 )
-          main.visible = false;
+          {main.visible = false;}
       else {
-          var maxwidth = (w/h)*1080;
-          var midwidth = maxwidth/2;
-          var newX = ((pos[0] / w) * maxwidth) - main.actuallayoutwidth / 3;
-          var newY = ((pos[1] / h) * 1080) - (100) - main.actuallayoutheight;
+          const maxwidth = (w/h)*1080;
+          const midwidth = maxwidth/2;
+          let newX = ((pos[0] / w) * maxwidth) - main.actuallayoutwidth / 3;
+          let newY = ((pos[1] / h) * 1080) - (100) - main.actuallayoutheight;
 
           if (newX>midwidth) {
               newX += ((newX-midwidth)/midwidth)*125;
@@ -139,7 +139,7 @@ function PositionPanels()
               newY += ((newY-540)/540)*50;
           }
 
-          var newPos = newX + "px " + newY + "px 0px";
+          const newPos = newX + "px " + newY + "px 0px";
           main.style["position"] = newPos;
           main.visible = true;
       }
@@ -264,7 +264,7 @@ function PositionPanels()
 
 function ScreenHeightWidth()
 {
-  var panel = $.GetContextPanel();
+  const panel = $.GetContextPanel();
 
   GameUI.CustomUIConfig().screenwidth = panel.actuallayoutwidth;
   GameUI.CustomUIConfig().screenheight = panel.actuallayoutheight;  
@@ -275,14 +275,14 @@ function ScreenHeightWidth()
 function UpdateEntities()
 {
   if (Object.keys(panels).length > 0)
-    entities = Entities.GetAllEntities();
+    {entities = Entities.GetAllEntities();}
 
   $.Schedule(1/10, UpdateEntities);
 }
 
 (function()
 { 
-  var pt = "worldpanels_" +  Game.GetLocalPlayerID()
+  const pt = "worldpanels_" +  Game.GetLocalPlayerID();
   ScreenHeightWidth(); 
   PositionPanels();
   UpdateEntities();
@@ -295,9 +295,9 @@ function UpdateEntities()
 
   subscription = PlayerTables.SubscribeNetTableListener(pt, WorldPanelChange);
 
-  var tab = PlayerTables.GetAllTableValues(pt);
-  for (var k in tab){
-    var change = {};
+  const tab = PlayerTables.GetAllTableValues(pt);
+  for (const k in tab){
+    const change = {};
     change[k] = tab[k];
     WorldPanelChange(pt, change, {}); 
   } 

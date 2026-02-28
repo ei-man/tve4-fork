@@ -7,7 +7,7 @@ var g_PlayerPanels = [];
 
 var g_TEAM_SPECATOR = 1;
 
-var MAP_NAME_ACTIVE = "clanwars"
+var MAP_NAME_ACTIVE = "clanwars";
 
 
 function TeamSelect_OnLeaveTeamPressed()
@@ -18,7 +18,7 @@ function TeamSelect_OnLeaveTeamPressed()
 function OnLockAndStartPressed()
 {
 	if ( Game.GetUnassignedPlayerIDs().length > 0  )
-		return;
+		{return;}
 
 	Game.SetTeamSelectionLocked( true );
 	Game.SetAutoLaunchEnabled( false );
@@ -43,9 +43,9 @@ function OnShufflePlayersPressed()
 
 function FindOrCreatePanelForPlayer( playerId, parent )
 {
-	for ( var i = 0; i < g_PlayerPanels.length; ++i )
+	for ( let i = 0; i < g_PlayerPanels.length; ++i )
 	{
-		var playerPanel = g_PlayerPanels[ i ];
+		const playerPanel = g_PlayerPanels[ i ];
 		
 		if ( playerPanel.GetAttributeInt( "player_id", -1 ) == playerId )
 		{
@@ -54,7 +54,7 @@ function FindOrCreatePanelForPlayer( playerId, parent )
 		}
 	}
 
-	var newPlayerPanel = $.CreatePanel( "Panel", parent, "player_root" );
+	const newPlayerPanel = $.CreatePanel( "Panel", parent, "player_root" );
 	newPlayerPanel.SetAttributeInt( "player_id", playerId );
 	newPlayerPanel.BLoadLayout( "file://{resources}/layout/custom_game/team_select/team_select_player.xml", false, false );
 	g_PlayerPanels.push( newPlayerPanel );
@@ -63,14 +63,14 @@ function FindOrCreatePanelForPlayer( playerId, parent )
 
 function FindPlayerSlotInTeamPanel( teamPanel, playerSlot )
 {
-	var playerListNode = teamPanel.FindChildInLayoutFile( "PlayerList" );
+	const playerListNode = teamPanel.FindChildInLayoutFile( "PlayerList" );
 	if ( playerListNode == null )
-		return null;
+		{return null;}
 	
-	var nNumChildren = playerListNode.GetChildCount();
-	for ( var i = 0; i < nNumChildren; ++i )
+	const nNumChildren = playerListNode.GetChildCount();
+	for ( let i = 0; i < nNumChildren; ++i )
 	{
-		var panel = playerListNode.GetChild( i );
+		const panel = playerListNode.GetChild( i );
 		if ( panel.GetAttributeInt( "player_slot", -1 ) == playerSlot )
 		{
 			return panel;
@@ -82,11 +82,11 @@ function FindPlayerSlotInTeamPanel( teamPanel, playerSlot )
 
 function UpdateTeamPanel( teamPanel )
 {
-	var teamId = teamPanel.GetAttributeInt( "team_id", -1 );
+	const teamId = teamPanel.GetAttributeInt( "team_id", -1 );
 	if ( teamId <= 0 )
-		return;
+		{return;}
 	
-	var teamPlayers = Game.GetPlayerIDsOnTeam( teamId );
+	const teamPlayers = Game.GetPlayerIDsOnTeam( teamId );
 	for ( var i = 0; i < teamPlayers.length; ++i )
 	{
 		var playerSlot = FindPlayerSlotInTeamPanel( teamPanel, i );
@@ -94,50 +94,50 @@ function UpdateTeamPanel( teamPanel )
 		FindOrCreatePanelForPlayer( teamPlayers[ i ], playerSlot );
 	}
 
-	var teamDetails = Game.GetTeamDetails( teamId );
-	var nNumPlayerSlots = teamDetails.team_max_players;
+	const teamDetails = Game.GetTeamDetails( teamId );
+	const nNumPlayerSlots = teamDetails.team_max_players;
 	for ( var i = teamPlayers.length; i < nNumPlayerSlots; ++i )
 	{
 		var playerSlot = FindPlayerSlotInTeamPanel( teamPanel, i );
 		if ( playerSlot.GetChildCount() == 0 )
 		{
-			var empty_slot = $.CreatePanel( "Panel", playerSlot, "player_root" );
+			const empty_slot = $.CreatePanel( "Panel", playerSlot, "player_root" );
 			empty_slot.BLoadLayout( "file://{resources}/layout/custom_game/team_select/team_select_empty_slot.xml", false, false );
 		}
 	}
 
 	teamPanel.SetHasClass( "team_is_full", ( teamPlayers.length === teamDetails.team_max_players ) );
 
-	var localPlayerInfo = Game.GetLocalPlayerInfo()
+	const localPlayerInfo = Game.GetLocalPlayerInfo();
 	if ( localPlayerInfo )
 	{
-		var localPlayerIsOnTeam = ( localPlayerInfo.player_team_id === teamId );
+		const localPlayerIsOnTeam = ( localPlayerInfo.player_team_id === teamId );
 		teamPanel.SetHasClass( "local_player_on_this_team", localPlayerIsOnTeam );
 	}
 }
 
 function OnTeamPlayerListChanged()
 {
-	var unassignedPlayersContainerNode = $( "#UnassignedPlayersContainer" );
+	const unassignedPlayersContainerNode = $( "#UnassignedPlayersContainer" );
 	if ( unassignedPlayersContainerNode === null )
-		return;	
+		{return;}	
 	
 	for ( var i = 0; i < g_PlayerPanels.length; ++i )
 	{
-		var playerPanel = g_PlayerPanels[ i ];
+		const playerPanel = g_PlayerPanels[ i ];
 		playerPanel.SetParent( unassignedPlayersContainerNode );
 	}
 
-	var unassignedPlayers = Game.GetUnassignedPlayerIDs();
+	const unassignedPlayers = Game.GetUnassignedPlayerIDs();
 	for ( var i = 0; i < unassignedPlayers.length; ++i )
 	{		
-		var playerId = unassignedPlayers[ i ];
+		const playerId = unassignedPlayers[ i ];
 		FindOrCreatePanelForPlayer( playerId, unassignedPlayersContainerNode );
 	}
 
 	for ( var i = 0; i < g_TeamPanels.length; ++i )
 	{
-		UpdateTeamPanel( g_TeamPanels[ i ] )
+		UpdateTeamPanel( g_TeamPanels[ i ] );
 	}
 
 	$( "#GameAndPlayersRoot" ).SetHasClass( "unassigned_players", unassignedPlayers.length != 0 );
@@ -146,9 +146,9 @@ function OnTeamPlayerListChanged()
 
 function OnPlayerSelectedTeam( nPlayerId, nTeamId, bSuccess )
 {
-	var playerInfo = Game.GetLocalPlayerInfo();
+	const playerInfo = Game.GetLocalPlayerInfo();
 	if ( !playerInfo )
-		return;
+		{return;}
 
 	if ( playerInfo.player_id === nPlayerId )
 	{
@@ -165,20 +165,20 @@ function OnPlayerSelectedTeam( nPlayerId, nTeamId, bSuccess )
 
 function CheckForHostPrivileges()
 {
-	var playerInfo = Game.GetLocalPlayerInfo();
+	const playerInfo = Game.GetLocalPlayerInfo();
 	if ( !playerInfo )
-		return;
+		{return;}
 
 	$.GetContextPanel().SetHasClass( "player_has_host_privileges", playerInfo.player_has_host_privileges );
 }
 var timer = CustomNetTables.GetTableValue( "building_settings", "team_choice_time").value;
 function UpdateTimer()
 {
-    CheckMapVisible()
-	var gameTime = Game.GetGameTime();
-	var transitionTime = Game.GetStateTransitionTime();
+    CheckMapVisible();
+	const gameTime = Game.GetGameTime();
+	const transitionTime = Game.GetStateTransitionTime();
 	CheckForHostPrivileges();
-	var mapInfo = Game.GetMapInfo();
+	const mapInfo = Game.GetMapInfo();
 	$( "#MapInfo" ).SetDialogVariable( "map_name", mapInfo.map_display_name );
 	if ( transitionTime >= 0 )
 	{
@@ -197,7 +197,7 @@ function UpdateTimer()
 		$( "#ShuffleTeamAssignmentButton" ).style.visibility = "collapse";
     }
 	
-	var autoLaunch = Game.GetAutoLaunchEnabled();
+	const autoLaunch = Game.GetAutoLaunchEnabled();
 	$( "#StartGameCountdownTimer" ).SetHasClass( "auto_start", autoLaunch );
 	$( "#StartGameCountdownTimer" ).SetHasClass( "forced_start", ( autoLaunch == false ) );
 	$.GetContextPanel().SetHasClass( "teams_locked", Game.GetTeamSelectionLocked() );
@@ -214,18 +214,18 @@ function CheckMapVisible()
 {
     if (Game.GetMapInfo().map_display_name != MAP_NAME_ACTIVE)
     {
-        $.GetContextPanel().style.visibility = "collapse"
-        $("#TeamSelectContainer").style.visibility = "collapse"
+        $.GetContextPanel().style.visibility = "collapse";
+        $("#TeamSelectContainer").style.visibility = "collapse";
     }
 }
 
 (function()
 {
-	var bShowSpectatorTeam = false;
-	var bAutoAssignTeams = true;
+	let bShowSpectatorTeam = false;
+	let bAutoAssignTeams = true;
 	if ( GameUI.CustomUIConfig().team_select )
 	{
-		var cfg = GameUI.CustomUIConfig().team_select;
+		const cfg = GameUI.CustomUIConfig().team_select;
 		if ( cfg.bShowSpectatorTeam !== undefined )
 		{
 			bShowSpectatorTeam = cfg.bShowSpectatorTeam;
@@ -236,15 +236,15 @@ function CheckMapVisible()
 		}
 	}
 	$( "#TeamSelectContainer" ).SetAcceptsFocus( true );
-	var teamsListRootNode = $( "#TeamsListRoot" );
-	var allTeamIDs = Game.GetAllTeamIDs();
+	const teamsListRootNode = $( "#TeamsListRoot" );
+	const allTeamIDs = Game.GetAllTeamIDs();
 	if ( bShowSpectatorTeam )
 	{
 		allTeamIDs.unshift( g_TEAM_SPECATOR );
 	}
-	for ( var teamId of allTeamIDs )
+	for ( const teamId of allTeamIDs )
 	{
-		var teamNode = $.CreatePanel( "Panel", teamsListRootNode, "" );
+		const teamNode = $.CreatePanel( "Panel", teamsListRootNode, "" );
 		teamNode.AddClass( "team_" + teamId ); // team_1, etc.
 		teamNode.SetAttributeInt( "team_id", teamId );
 		teamNode.BLoadLayout( "file://{resources}/layout/custom_game/team_select/team_select_team.xml", false, false );
@@ -256,7 +256,7 @@ function CheckMapVisible()
 	}
 	OnTeamPlayerListChanged();
 	UpdateTimer();
-    CheckMapVisible()
+    CheckMapVisible();
 	$.RegisterForUnhandledEvent( "DOTAGame_TeamPlayerListChanged", OnTeamPlayerListChanged );
 	$.RegisterForUnhandledEvent( "DOTAGame_PlayerSelectedCustomTeam", OnPlayerSelectedTeam );
 })();

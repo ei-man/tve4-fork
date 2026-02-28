@@ -4,43 +4,43 @@
 var DESELECT_BUILDINGS = false; // Get only the units when units&buildings are on the same list
 var SELECT_ONLY_BUILDINGS = false; // Get only the buildings when units&buildings are on the same list
 var DISPLAY_RANGE_PARTICLE = false; // Uses the main selected entity to update a particle showing attack range
-var rangedParticle
+var rangedParticle;
 
 function SelectionFilter( entityList ) {
     
     if (DESELECT_BUILDINGS) {
         if (entityList.length > 1 && IsMixedBuildingSelectionGroup(entityList) ){
-            $.Schedule(1/60, DeselectBuildings) 
+            $.Schedule(1/60, DeselectBuildings); 
         }
     }
 
     else if (SELECT_ONLY_BUILDINGS) {
         if (entityList.length > 1 && IsMixedBuildingSelectionGroup(entityList) ){
-            $.Schedule(1/60, SelectOnlyBuildings)   
+            $.Schedule(1/60, SelectOnlyBuildings);   
         }
     }
 
     if (DISPLAY_RANGE_PARTICLE) {
-        var mainSelected = Players.GetLocalPlayerPortraitUnit();
+        const mainSelected = Players.GetLocalPlayerPortraitUnit();
 
         // Remove old particle
         if (rangedParticle)
-            Particles.DestroyParticleEffect(rangedParticle, true)
+            {Particles.DestroyParticleEffect(rangedParticle, true);}
 
         // Create range display on the selected ranged attacker
         if (SelectionFilter_IsCustomBuilding(mainSelected) && Entities.HasAttackCapability(mainSelected))
         {
-            var range = Entities.GetAttackRange(mainSelected)
-            rangedParticle = Particles.CreateParticle("particles/ui_mouseactions/range_display.vpcf", ParticleAttachment_t.PATTACH_CUSTOMORIGIN, mainSelected)
-            var position = Entities.GetAbsOrigin(mainSelected)
-            position[2] = 380 //Offset
-            Particles.SetParticleControl(rangedParticle, 0, position)
-            Particles.SetParticleControl(rangedParticle, 1, [range, 0, 0])
+            const range = Entities.GetAttackRange(mainSelected);
+            rangedParticle = Particles.CreateParticle("particles/ui_mouseactions/range_display.vpcf", ParticleAttachment_t.PATTACH_CUSTOMORIGIN, mainSelected);
+            const position = Entities.GetAbsOrigin(mainSelected);
+            position[2] = 380; //Offset
+            Particles.SetParticleControl(rangedParticle, 0, position);
+            Particles.SetParticleControl(rangedParticle, 1, [range, 0, 0]);
         }
     }
 
-    for (var i = 0; i < entityList.length; i++) {
-        var overrideEntityIndex = GetSelectionOverride(entityList[i])
+    for (let i = 0; i < entityList.length; i++) {
+        const overrideEntityIndex = GetSelectionOverride(entityList[i]);
         if (overrideEntityIndex != -1) {
             GameUI.SelectUnit(overrideEntityIndex, false);
         }
@@ -48,14 +48,14 @@ function SelectionFilter( entityList ) {
 }
 
 function DeselectBuildings() {
-    var iPlayerID = Players.GetLocalPlayer();
-    var selectedEntities = Players.GetSelectedEntities( iPlayerID );
+    const iPlayerID = Players.GetLocalPlayer();
+    const selectedEntities = Players.GetSelectedEntities( iPlayerID );
     
     skip = true;
-    var first = FirstNonBuildingEntityFromSelection(selectedEntities)
+    const first = FirstNonBuildingEntityFromSelection(selectedEntities);
     GameUI.SelectUnit(first, false); // Overrides the selection group
 
-    for (var unit of selectedEntities) {
+    for (const unit of selectedEntities) {
         skip = true; // Makes it skip an update
         if (!SelectionFilter_IsCustomBuilding(unit) && unit != first){
             GameUI.SelectUnit(unit, true);
@@ -64,47 +64,47 @@ function DeselectBuildings() {
 }
 
 function FirstNonBuildingEntityFromSelection( entityList ){
-    for (var i = 0; i < entityList.length; i++) {
+    for (let i = 0; i < entityList.length; i++) {
         if (!SelectionFilter_IsCustomBuilding(entityList[i])){
-            return entityList[i]
+            return entityList[i];
         }
     }
-    return 0
+    return 0;
 }
 
 function GetFirstUnitFromSelectionSkipUnit ( entityList, entIndex ) {
-    for (var i = 0; i < entityList.length; i++) {
+    for (let i = 0; i < entityList.length; i++) {
         if ((entityList[i]) != entIndex){
-            return entityList[i]
+            return entityList[i];
         }
     }
-    return 0
+    return 0;
 }
 
 // Returns whether the selection group contains both buildings and non-building units
 function IsMixedBuildingSelectionGroup ( entityList ) {
-    var buildings = 0
-    var nonBuildings = 0
-    for (var i = 0; i < entityList.length; i++) {
+    let buildings = 0;
+    let nonBuildings = 0;
+    for (let i = 0; i < entityList.length; i++) {
         if (SelectionFilter_IsCustomBuilding(entityList[i])){
-            buildings++
+            buildings++;
         }
         else {
-            nonBuildings++
+            nonBuildings++;
         }
     }
-    return (buildings>0 && nonBuildings>0)
+    return (buildings>0 && nonBuildings>0);
 }
 
 function SelectOnlyBuildings() {
-    var iPlayerID = Players.GetLocalPlayer();
-    var selectedEntities = Players.GetSelectedEntities( iPlayerID );
+    const iPlayerID = Players.GetLocalPlayer();
+    const selectedEntities = Players.GetSelectedEntities( iPlayerID );
     
     skip = true;
-    var first = FirstBuildingEntityFromSelection(selectedEntities)
+    const first = FirstBuildingEntityFromSelection(selectedEntities);
     GameUI.SelectUnit(first, false); // Overrides the selection group
 
-    for (var unit of selectedEntities) {
+    for (const unit of selectedEntities) {
         skip = true; // Makes it skip an update
         if (SelectionFilter_IsCustomBuilding(unit) && unit != first){
             GameUI.SelectUnit(unit, true);
@@ -113,12 +113,12 @@ function SelectOnlyBuildings() {
 }
 
 function FirstBuildingEntityFromSelection( entityList ){
-    for (var i = 0; i < entityList.length; i++) {
+    for (let i = 0; i < entityList.length; i++) {
         if (SelectionFilter_IsCustomBuilding(entityList[i])){
-            return entityList[i]
+            return entityList[i];
         }
     }
-    return 0
+    return 0;
 }
 
 function SelectionFilter_IsCustomBuilding( entityIndex ){
@@ -126,19 +126,19 @@ function SelectionFilter_IsCustomBuilding( entityIndex ){
 }
 
 function IsMechanical( entityIndex ) {
-    var ability_siege = Entities.GetAbilityByName( entityIndex, "ability_siege")
-    return (ability_siege != -1)
+    const ability_siege = Entities.GetAbilityByName( entityIndex, "ability_siege");
+    return (ability_siege != -1);
 }
 
 function IsCityCenter( entityIndex ){
-    return (Entities.GetUnitLabel( entityIndex ) == "city_center")
+    return (Entities.GetUnitLabel( entityIndex ) == "city_center");
 }
 
 function SelectionFilter_HasModifier(entIndex, modifierName) {
-    var nBuffs = Entities.GetNumBuffs(entIndex)
-    for (var i = 0; i < nBuffs; i++) {
+    const nBuffs = Entities.GetNumBuffs(entIndex);
+    for (let i = 0; i < nBuffs; i++) {
         if (Buffs.GetName(entIndex, Entities.GetBuff(entIndex, i)) == modifierName)
-            return true
+            {return true;}
     };
-    return false
+    return false;
 };

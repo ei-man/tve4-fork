@@ -1,9 +1,9 @@
 // @ts-nocheck
-'use strict';
+"use strict";
 
 GameUI.SetRenderBottomInsetOverride(0);
 
-var state = 'disabled';
+var state = "disabled";
 var frame_rate = 1/20;
 var buildTimer = null;
 var tree_update_interval = 1;
@@ -45,7 +45,7 @@ var update_trees = CustomNetTables.GetTableValue("building_settings", "update_tr
 
 var height_restriction;
 if (CustomNetTables.GetTableValue("building_settings", "height_restriction") !== undefined)
-    height_restriction = CustomNetTables.GetTableValue("building_settings", "height_restriction").value;
+    {height_restriction = CustomNetTables.GetTableValue("building_settings", "height_restriction").value;}
 
 var GRID_TYPES = CustomNetTables.GetTableValue("building_settings", "grid_types");
 CustomNetTables.SubscribeNetTableListener("building_settings", function() {
@@ -63,6 +63,7 @@ if (!Root.loaded) {
 }
 
 function StartBuildingHelper(params) {
+    Game.:
     if (params !== undefined) {
         // Cancel previous scheduled update loop
         if (buildTimer !== null) {
@@ -79,8 +80,8 @@ function StartBuildingHelper(params) {
         range = params.range;
         overlay_size = size + alt_grid_squares * 2;
         builderIndex = params.builderIndex;
-        var scale = params.scale;
-        var entindex = params.entindex;
+        const scale = params.scale;
+        const entindex = params.entindex;
         propScale = params.propScale;
         offsetZ = params.offsetZ;
         modelOffset = params.modelOffset;
@@ -89,9 +90,9 @@ function StartBuildingHelper(params) {
         distance_to_gold_mine = HasGoldMineDistanceRestriction(entindex);
 
         // If we chose to not recolor the ghost model, set it white
-        var ghost_color = [0, 255, 0];
+        let ghost_color = [0, 255, 0];
         if (!recolor_ghost)
-            ghost_color = [255, 255, 255];
+            {ghost_color = [255, 255, 255];}
 
         pressedShift = GameUI.IsShiftDown();
 
@@ -105,7 +106,7 @@ function StartBuildingHelper(params) {
         // Grid squares
         gridParticles = [];
         for (var x = 0; x < size * size; x++) {
-            var particle = Particles.CreateParticle("particles/buildinghelper/square_sprite.vpcf", ParticleAttachment_t.PATTACH_CUSTOMORIGIN, 0);
+            const particle = Particles.CreateParticle("particles/buildinghelper/square_sprite.vpcf", ParticleAttachment_t.PATTACH_CUSTOMORIGIN, 0);
             Particles.SetParticleControl(particle, 1, [32, 0, 0]);
             Particles.SetParticleControl(particle, 3, [grid_alpha, 0, 0]);
             gridParticles.push(particle);
@@ -123,32 +124,32 @@ function StartBuildingHelper(params) {
         rangeOverlayActive = false;
         overlayParticles = [];
     }
-    if (state == 'active') {
+    if (state == "active") {
         // Schedule next update and store handle
         buildTimer = $.Schedule(frame_rate, StartBuildingHelper);
 
         // Get all the visible entities
-        var entities = Entities.GetAllEntitiesByClassname('npc_dota_building');
-        var hero_entities = Entities.GetAllHeroEntities();
-        var creature_entities = Entities.GetAllEntitiesByClassname('npc_dota_creature');
-        var dummy_entities = Entities.GetAllEntitiesByName('npc_dota_base');
-        var building_entities = Entities.GetAllBuildingEntities();
+        let entities = Entities.GetAllEntitiesByClassname("npc_dota_building");
+        const hero_entities = Entities.GetAllHeroEntities();
+        const creature_entities = Entities.GetAllEntitiesByClassname("npc_dota_creature");
+        const dummy_entities = Entities.GetAllEntitiesByName("npc_dota_base");
+        const building_entities = Entities.GetAllBuildingEntities();
         entities = entities.concat(hero_entities, building_entities, creature_entities, dummy_entities);
 
         // Build the entity grid with the construction sizes and entity origins
         entityGrid = [];
         for (var i = 0; i < entities.length; i++) {
             if (!Entities.IsAlive(entities[i]) || Entities.IsOutOfGame(entities[i]) || !BuildingHelper_HasModifier(entities[i], "modifier_building"))
-                continue;
-            var entPos = Entities.GetAbsOrigin(entities[i]);
-            var squares = GetConstructionSize(entities[i]);
+                {continue;}
+            const entPos = Entities.GetAbsOrigin(entities[i]);
+            const squares = GetConstructionSize(entities[i]);
 
             if (squares > 0) {
                 BlockGridSquares(entPos, squares, GRID_TYPES["BLOCKED"]);
             } else {
-                if (Entities.GetUnitName(entities[i]) == 'npc_dota_units_base') {
+                if (Entities.GetUnitName(entities[i]) == "npc_dota_units_base") {
                     if (BuildingHelper_HasModifier(entities[i], "modifier_tree_cut"))
-                        cutTrees[entPos] = entities[i];
+                        {cutTrees[entPos] = entities[i];}
                 } else if (Entities.GetTeamNumber(entities[i]) != Entities.GetTeamNumber(builderIndex) && !BuildingHelper_HasModifier(entities[i], "modifier_out_of_world")) {
                     BlockGridSquares(entPos, 2, GRID_TYPES["BLOCKED"]);
                 } else if (entities[i] == builderIndex) {
@@ -159,47 +160,47 @@ function StartBuildingHelper(params) {
 
         // Update treeGrid (slowly, as its the most expensive)
         if (update_trees) {
-            var time = Game.GetGameTime();
+            const time = Game.GetGameTime();
             if (time - last_tree_update > tree_update_interval) {
                 last_tree_update = time;
-                tree_entities = Entities.GetAllEntitiesByClassname('ent_dota_tree');
+                tree_entities = Entities.GetAllEntitiesByClassname("ent_dota_tree");
                 treeGrid = [];
                 for (var i = 0; i < tree_entities.length; i++) {
-                    var treePos = Entities.GetAbsOrigin(tree_entities[i]);
+                    const treePos = Entities.GetAbsOrigin(tree_entities[i]);
                     if (cutTrees[treePos] === undefined)
-                        BlockGridSquares(treePos, 2, "TREE");
+                        {BlockGridSquares(treePos, 2, "TREE");}
                 }
             }
         }
 
-        var mPos = GameUI.GetCursorPosition();
+        const mPos = GameUI.GetCursorPosition();
         altDown = GameUI.IsAltDown();
-        var SHIFT = altDown ? 128 : 0;
+        const SHIFT = altDown ? 128 : 0;
         if (GamePos != Game.ScreenXYToWorld(mPos[0], mPos[1])) {
             GamePos = Game.ScreenXYToWorld(mPos[0], mPos[1]);
             if (GamePos !== null) {
                 SnapToGrid(GamePos, size);
                 invalid = false;
-                var color = [0,255,0];
-                var part = 0;
-                var halfSide = size*32;
-                var boundingRect = {
+                let color = [0,255,0];
+                let part = 0;
+                let halfSide = size*32;
+                let boundingRect = {
                     leftBorderX:  GamePos[0] - halfSide,
                     rightBorderX: GamePos[0] + halfSide,
                     topBorderY:   GamePos[1] + halfSide,
                     bottomBorderY: GamePos[1] - halfSide
                 };
-                if (GamePos[0] > 10000000) return;
+                if (GamePos[0] > 10000000) {return;}
 
                 // Building Base Grid
                 for (var x = boundingRect.leftBorderX + 32; x <= boundingRect.rightBorderX - 32; x += 64) {
                     for (var y = boundingRect.topBorderY - 32; y >= boundingRect.bottomBorderY + 32; y -= 64) {
-                        var pos = SnapHeight(x, y, GamePos[2] + 5 + SHIFT);
-                        if (part > size*size) return;
-                        var gridParticle = gridParticles[part++];
+                        const pos = SnapHeight(x, y, GamePos[2] + 5 + SHIFT);
+                        if (part > size*size) {return;}
+                        const gridParticle = gridParticles[part++];
                         Particles.SetParticleControl(gridParticle, 0, pos);
                         color = IsBlocked(pos) ? [255,0,0] : [0,255,0];
-                        if (color[0] == 255) invalid = true;
+                        if (color[0] == 255) {invalid = true;}
                         Particles.SetParticleControl(gridParticle, 2, color);
                     }
                 }
@@ -207,7 +208,7 @@ function StartBuildingHelper(params) {
                 // Overlay Grid
                 if (overlayParticles.length == 0) {
                     for (var i = 0; i < overlay_size*overlay_size; i++) {
-                        var p = Particles.CreateParticle("particles/buildinghelper/square_overlay.vpcf", ParticleAttachment_t.PATTACH_CUSTOMORIGIN, 0);
+                        const p = Particles.CreateParticle("particles/buildinghelper/square_overlay.vpcf", ParticleAttachment_t.PATTACH_CUSTOMORIGIN, 0);
                         Particles.SetParticleControl(p, 1, [32,0,0]);
                         Particles.SetParticleControl(p, 3, [alt_grid_alpha,0,0]);
                         overlayParticles.push(p);
@@ -224,16 +225,16 @@ function StartBuildingHelper(params) {
                 };
                 for (var x = boundingRect.leftBorderX + 32; x <= boundingRect.rightBorderX - 32; x += 64) {
                     for (var y = boundingRect.topBorderY - 32; y >= boundingRect.bottomBorderY + 32; y -= 64) {
-                        var pos2 = SnapHeight(x, y, GamePos[2] + 5 + SHIFT);
-                        if (part >= overlay_size*overlay_size) return;
-                        var op = overlayParticles[part++];
+                        const pos2 = SnapHeight(x, y, GamePos[2] + 5 + SHIFT);
+                        if (part >= overlay_size*overlay_size) {return;}
+                        const op = overlayParticles[part++];
                         color = (IsBlocked(pos2) || TooCloseToGoldmine(pos2)) ? [255,0,0] : [255,255,255];
                         Particles.SetParticleControl(op, 0, pos2);
                         Particles.SetParticleControl(op, 2, color);
                     }
                 }
 
-                var modelPos = SnapHeight(GamePos[0], GamePos[1], GamePos[2] + 2 + SHIFT);
+                const modelPos = SnapHeight(GamePos[0], GamePos[1], GamePos[2] + 2 + SHIFT);
                 if (invalid) {
                     if (rangeOverlayActive && rangeOverlay !== undefined) {
                         Particles.DestroyParticleEffect(rangeOverlay, true);
@@ -249,13 +250,13 @@ function StartBuildingHelper(params) {
                         rangeOverlayActive = true;
                     }
                 }
-                if (rangeOverlay !== undefined) Particles.SetParticleControl(rangeOverlay, 0, modelPos);
+                if (rangeOverlay !== undefined) {Particles.SetParticleControl(rangeOverlay, 0, modelPos);}
 
                 modelPos[2] += modelOffset;
                 Particles.SetParticleControl(modelParticle, 0, modelPos);
 
                 if (turn_red) {
-                    var mc = invalid ? [255,0,0] : [255,255,255];
+                    const mc = invalid ? [255,0,0] : [255,255,255];
                     Particles.SetParticleControl(modelParticle, 2, mc);
                 }
             }
@@ -268,7 +269,7 @@ function StartBuildingHelper(params) {
 }
 
 function EndBuildingHelper() {
-    state = 'disabled';
+    state = "disabled";
     if (buildTimer !== null) {
         $.CancelScheduled(buildTimer);
         buildTimer = null;
@@ -306,9 +307,9 @@ function SendBuildCommand(params) {
         return true;
     }
     pressedShift = GameUI.IsShiftDown();
-    var mainSelected = Players.GetLocalPlayerPortraitUnit();
-    var mPos = GameUI.GetCursorPosition();
-    var GamePos = Game.ScreenXYToWorld(mPos[0], mPos[1]);
+    const mainSelected = Players.GetLocalPlayerPortraitUnit();
+    const mPos = GameUI.GetCursorPosition();
+    const GamePos = Game.ScreenXYToWorld(mPos[0], mPos[1]);
     GameEvents.SendCustomGameEventToServer("building_helper_build_command", {
         builder: mainSelected,
         X: GamePos[0], Y: GamePos[1], Z: GamePos[2],
@@ -327,7 +328,7 @@ function SendCancelCommand(params) {
 }
 
 function CreateErrorMessage(msg) {
-    var reason = msg.reason || 80;
+    const reason = msg.reason || 80;
     if (msg.message) {
         GameEvents.SendEventClientSide("dota_hud_error_message", {
             splitscreenplayer: 0,
@@ -343,34 +344,34 @@ function CreateErrorMessage(msg) {
 }
 
 function RegisterGNV(msg) {
-    var GridNav = [];
-    var squareX = msg.squareX;
-    var squareY = msg.squareY;
-    var boundX = msg.boundX;
-    var boundY = msg.boundY;
-    var arr = [];
-    var strlength = "";
+    const GridNav = [];
+    const squareX = msg.squareX;
+    const squareY = msg.squareY;
+    const boundX = msg.boundX;
+    const boundY = msg.boundY;
+    let arr = [];
+    let strlength = "";
     for (var i = 0; i < msg.gnv.length; i++) {
-        var chr = msg.gnv.charCodeAt(i);
+        const chr = msg.gnv.charCodeAt(i);
         if (chr >= 48 && chr <= 57) {
             strlength += String.fromCharCode(chr);
         } else {
-            var num = parseInt(strlength);
-            if (isNaN(num)) num = 1;
-            for (var j = 0; j < num; j++) arr.push(String.fromCharCode(chr));
+            let num = parseInt(strlength);
+            if (isNaN(num)) {num = 1;}
+            for (var j = 0; j < num; j++) {arr.push(String.fromCharCode(chr));}
             strlength = "";
         }
     }
     msg.gnv = arr.join("");
     arr = [];
     for (var i = 0; i < msg.gnv.length; i++) {
-        var code = msg.gnv.charCodeAt(i) - 58;
+        const code = msg.gnv.charCodeAt(i) - 58;
         for (var j = 4; j >= 0; j -= 2) {
-            var g = (code & (3 << j)) >> j;
-            if (g != 0) arr.push(g);
+            const g = (code & (3 << j)) >> j;
+            if (g != 0) {arr.push(g);}
         }
     }
-    var x = 0;
+    let x = 0;
     for (var i = 0; i < squareY; i++) {
         GridNav[i] = [];
         for (var j = 0; j < squareX; j++) {
@@ -385,9 +386,9 @@ function RegisterGNV(msg) {
     Root.boundY = boundY;
 
     treeGrid = [];
-    var treeEntities = Entities.GetAllEntitiesByClassname('ent_dota_tree');
+    const treeEntities = Entities.GetAllEntitiesByClassname("ent_dota_tree");
     for (var i = 0; i < treeEntities.length; i++) {
-        var treePos = Entities.GetAbsOrigin(treeEntities[i]);
+        const treePos = Entities.GetAbsOrigin(treeEntities[i]);
         BlockGridSquares(treePos, 2, "TREE");
     }
 }
@@ -426,46 +427,46 @@ function SnapHeight(x, y, z) {
 }
 
 function IsBlocked(position) {
-    var y = WorldToGridPosX(position[0]) - Root.boundX;
-    var x = WorldToGridPosY(position[1]) - Root.boundY;
+    const y = WorldToGridPosX(position[0]) - Root.boundX;
+    const x = WorldToGridPosY(position[1]) - Root.boundY;
 
     if (height_restriction !== undefined && position[2] < height_restriction)
-        return true;
+        {return true;}
     if (Root.GridNav[x] == null) {
         RequestGNV();
     }
-    var flag = Root.GridNav[x][y];
-    var entGridValue = (entityGrid[x] !== undefined && entityGrid[x][y] !== undefined) ? entityGrid[x][y] : GRID_TYPES["BUILDABLE"];
+    let flag = Root.GridNav[x][y];
+    const entGridValue = (entityGrid[x] !== undefined && entityGrid[x][y] !== undefined) ? entityGrid[x][y] : GRID_TYPES["BUILDABLE"];
     if (entGridValue == GRID_TYPES["BLOCKED"])
-        flag = GRID_TYPES["BLOCKED"];
-    var adjust = GRID_TYPES["BUILDABLE"] + GRID_TYPES["BLOCKED"];
+        {flag = GRID_TYPES["BLOCKED"];}
+    const adjust = GRID_TYPES["BUILDABLE"] + GRID_TYPES["BLOCKED"];
     if ((flag & adjust) == adjust)
-        flag -= GRID_TYPES["BUILDABLE"];
+        {flag -= GRID_TYPES["BUILDABLE"];}
     if ((flag & requires) != requires)
-        return true;
+        {return true;}
     if (treeGrid[x] && (treeGrid[x][y] & GRID_TYPES["BLOCKED"]))
-        return true;
+        {return true;}
     return false;
 }
 
 function BlockEntityGrid(position, gridType) {
-    var y = WorldToGridPosX(position[0]) - Root.boundX;
-    var x = WorldToGridPosY(position[1]) - Root.boundY;
-    if (entityGrid[x] === undefined) entityGrid[x] = [];
-    if (entityGrid[x][y] === undefined) entityGrid[x][y] = 0;
+    const y = WorldToGridPosX(position[0]) - Root.boundX;
+    const x = WorldToGridPosY(position[1]) - Root.boundY;
+    if (entityGrid[x] === undefined) {entityGrid[x] = [];}
+    if (entityGrid[x][y] === undefined) {entityGrid[x][y] = 0;}
     entityGrid[x][y] |= gridType;
 }
 
 function BlockTreeGrid(position) {
-    var y = WorldToGridPosX(position[0]) - Root.boundX;
-    var x = WorldToGridPosY(position[1]) - Root.boundY;
-    if (treeGrid[x] === undefined) treeGrid[x] = [];
+    const y = WorldToGridPosX(position[0]) - Root.boundX;
+    const x = WorldToGridPosY(position[1]) - Root.boundY;
+    if (treeGrid[x] === undefined) {treeGrid[x] = [];}
     treeGrid[x][y] = GRID_TYPES["BLOCKED"];
 }
 
 function BlockGridSquares(position, squares, gridType) {
-    var halfSide = (squares / 2) * 64;
-    var boundingRect = {
+    const halfSide = (squares / 2) * 64;
+    const boundingRect = {
         leftBorderX: position[0] - halfSide,
         rightBorderX: position[0] + halfSide,
         topBorderY: position[1] + halfSide,
@@ -487,14 +488,14 @@ function BlockGridSquares(position, squares, gridType) {
 }
 
 function BlockGridInRadius(position, radius, gridType) {
-    var boundingRect = {
+    const boundingRect = {
         leftBorderX: position[0] - radius,
         rightBorderX: position[0] + radius,
         topBorderY: position[1] + radius,
         bottomBorderY: position[1] - radius
     };
-    for (var x = boundingRect.leftBorderX + 32; x <= boundingRect.rightBorderX - 32; x += 64) {
-        for (var y = boundingRect.topBorderY - 32; y >= boundingRect.bottomBorderY + 32; y -= 64) {
+    for (let x = boundingRect.leftBorderX + 32; x <= boundingRect.rightBorderX - 32; x += 64) {
+        for (let y = boundingRect.topBorderY - 32; y >= boundingRect.bottomBorderY + 32; y -= 64) {
             if (Length2D(position, [x, y]) <= radius) {
                 BlockEntityGrid([x, y, 0], gridType);
             }
@@ -511,18 +512,18 @@ function WorldToGridPosY(y) {
 }
 
 function GetConstructionSize(entIndex) {
-    var entName = Entities.GetUnitName(entIndex);
-    var table = CustomNetTables.GetTableValue("buildings", entName);
+    const entName = Entities.GetUnitName(entIndex);
+    const table = CustomNetTables.GetTableValue("buildings", entName);
     return table ? table.size : 0;
 }
 
 function GetRequiredGridType(entIndex) {
-    var entName = Entities.GetUnitName(entIndex);
-    var table = CustomNetTables.GetTableValue("buildings", entName);
+    const entName = Entities.GetUnitName(entIndex);
+    const table = CustomNetTables.GetTableValue("buildings", entName);
     if (table && table.requires !== undefined) {
-        var types = table.requires.split(" ");
-        var value = 0;
-        for (var i = 0; i < types.length; i++) {
+        const types = table.requires.split(" ");
+        let value = 0;
+        for (let i = 0; i < types.length; i++) {
             value += GRID_TYPES[types[i]];
         }
         return value;
@@ -531,29 +532,29 @@ function GetRequiredGridType(entIndex) {
 }
 
 function GetCustomGrid(entIndex) {
-    var entName = Entities.GetUnitName(entIndex);
-    var table = CustomNetTables.GetTableValue("buildings", entName);
+    const entName = Entities.GetUnitName(entIndex);
+    const table = CustomNetTables.GetTableValue("buildings", entName);
     if (table && table.grid !== undefined) {
-        for (var type in table.grid) {
+        for (const type in table.grid) {
             if (BuildingHelper_HasModifier(entIndex, "modifier_grid_" + type.toLowerCase()))
-                return table.grid;
+                {return table.grid;}
         }
     }
 }
 
 function HasGoldMineDistanceRestriction(entIndex) {
-    var entName = Entities.GetUnitName(entIndex);
-    var table = CustomNetTables.GetTableValue("buildings", entName);
+    const entName = Entities.GetUnitName(entIndex);
+    const table = CustomNetTables.GetTableValue("buildings", entName);
     return table ? table.distance_to_gold_mine : 0;
 }
 
 function GetClosestDistanceToGoldMine(position) {
-    var building_entities = Entities.GetAllEntitiesByClassname('npc_dota_building');
-    var minDistance = 99999;
-    for (var i = 0; i < building_entities.length; i++) {
+    const building_entities = Entities.GetAllEntitiesByClassname("npc_dota_building");
+    let minDistance = 99999;
+    for (let i = 0; i < building_entities.length; i++) {
         if (Entities.GetUnitName(building_entities[i]) == "gold_mine") {
-            var d = Length2D(position, Entities.GetAbsOrigin(building_entities[i]));
-            if (d < minDistance) minDistance = d;
+            const d = Length2D(position, Entities.GetAbsOrigin(building_entities[i]));
+            if (d < minDistance) {minDistance = d;}
         }
     }
     return minDistance;
@@ -568,10 +569,10 @@ function Length2D(v1, v2) {
 }
 
 function BuildingHelper_HasModifier(entIndex, modifierName) {
-    var nBuffs = Entities.GetNumBuffs(entIndex);
-    for (var i = 0; i < nBuffs; i++) {
+    const nBuffs = Entities.GetNumBuffs(entIndex);
+    for (let i = 0; i < nBuffs; i++) {
         if (Buffs.GetName(entIndex, Entities.GetBuff(entIndex, i)) == modifierName)
-            return true;
+            {return true;}
     }
     return false;
 }

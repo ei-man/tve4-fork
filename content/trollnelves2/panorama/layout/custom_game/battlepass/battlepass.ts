@@ -1,6 +1,6 @@
 // @ts-nocheck
-var BP_INIT = false
-var player_bp_info = [0, []]
+var BP_INIT = false;
+var player_bp_info = [0, []];
 
 function Battlepass_OpenPanel() {
 	player_bp_info[0] = CustomNetTables.GetTableValue("Shop", Players.GetLocalPlayer())[7];
@@ -9,35 +9,35 @@ function Battlepass_OpenPanel() {
 	player_bp_info[2] = CustomNetTables.GetTableValue("Shop", Players.GetLocalPlayer())[15];
 
     // Есть ли у игрока бп, скрытие кнопки
-    let ButtonBuyPass = $("#ButtonBuyPass")
-    ButtonBuyPass.style.opacity = (player_bp_info[2][0] == null || player_bp_info[2][0] == "none") ? 1 : 0
+    const ButtonBuyPass = $("#ButtonBuyPass");
+    ButtonBuyPass.style.opacity = (player_bp_info[2][0] == null || player_bp_info[2][0] == "none") ? 1 : 0;
    
 	if (!BP_INIT) {
-		BP_INIT = true
-		InitLevel()
-		InitDonateRewards()
+		BP_INIT = true;
+		InitLevel();
+		InitDonateRewards();
 	}
     else
-        InitLevel()
-	$("#BattlePassPanel").SetHasClass("Open", !$("#BattlePassPanel").BHasClass("Open"))
+        {InitLevel();}
+	$("#BattlePassPanel").SetHasClass("Open", !$("#BattlePassPanel").BHasClass("Open"));
 }
 
 
 
 function Battlepass_ClosePanel() {
-	$("#BattlePassPanel").SetHasClass("Open", false)
+	$("#BattlePassPanel").SetHasClass("Open", false);
 }
 
 function InitLevel() {
-	if (!player_bp_info[0] || !player_bp_info[0][0]) return;
+	if (!player_bp_info[0] || !player_bp_info[0][0]) {return;}
 
-	let level = GetLevelPlayer(player_bp_info[0][0]);
-	let currExp = GetExpPlayer(player_bp_info[0][0]);
+	const level = GetLevelPlayer(player_bp_info[0][0]);
+	const currExp = GetExpPlayer(player_bp_info[0][0]);
 
 	$("#LevelText").text = $.Localize("#battlepass_level") + ": " + level;
 
-	let currXPNeeded = exp_battlepass[String(level)];
-	let nextXPNeeded = exp_battlepass[String(level + 1)];
+	const currXPNeeded = exp_battlepass[String(level)];
+	const nextXPNeeded = exp_battlepass[String(level + 1)];
 
 	if (nextXPNeeded !== undefined) {
 		$("#ExpText").text = `Experience ${currExp} / ${nextXPNeeded}`;
@@ -48,7 +48,7 @@ function InitLevel() {
 		var width = 100;
 	}
 
-	if (isNaN(width)) width = 0;
+	if (isNaN(width)) {width = 0;}
 	width = Math.max(0, Math.min(100, width));
 	$("#BattlePass_Progress_6").style.width = width + "%";
 }
@@ -71,29 +71,29 @@ function InitDonateRewards() {
 
 function CreateLevelBlock(i, lvl)
 {
-    let BattlePass_Rewards = $("#BattlePass_Rewards")
+    const BattlePass_Rewards = $("#BattlePass_Rewards");
 
     // Теперь это будет фулл панель где мы все засунем
-    let level_block = $.CreatePanel("Panel", BattlePass_Rewards, "LevelBlock" + i);
-    level_block.AddClass("level_block_main")
+    const level_block = $.CreatePanel("Panel", BattlePass_Rewards, "LevelBlock" + i);
+    level_block.AddClass("level_block_main");
 
     // Текст уровня
-    let LevelPanel = $.CreatePanel("Panel", level_block, "LevelPanel");
+    const LevelPanel = $.CreatePanel("Panel", level_block, "LevelPanel");
     LevelPanel.AddClass("LevelPanel");
 
-    let LevelTextPanel = $.CreatePanel("Label", LevelPanel, "LevelTextPanel");
+    const LevelTextPanel = $.CreatePanel("Label", LevelPanel, "LevelTextPanel");
 	LevelTextPanel.AddClass("LevelTextPanel");
-	LevelTextPanel.text = $.Localize("#battlepass_level") + " " + i
+	LevelTextPanel.text = $.Localize("#battlepass_level") + " " + i;
 
-    CreateFreeReward(level_block, i, lvl)
-    CreateDonateReward(level_block, i, lvl)
+    CreateFreeReward(level_block, i, lvl);
+    CreateDonateReward(level_block, i, lvl);
     
-    let color = visual_level_light[i]
+    const color = visual_level_light[i];
 	if (color && color != "") 
     {
-		let RewardLight = $.CreatePanel("Panel", level_block, "");
+		const RewardLight = $.CreatePanel("Panel", level_block, "");
 		RewardLight.AddClass("RewardLight");
-		RewardLight.style.washColor = color
+		RewardLight.style.washColor = color;
 	}
 }
 
@@ -186,8 +186,8 @@ function CreateFreeReward(parent, reward_level, lvl) {
 function GiveReward(id, panel, rew_panel) {
 	panel.SetPanelEvent("onactivate", function () { });
 	rew_panel.AddClass("PanelGives");
-	rew_panel.RemoveClass("Unlocked")
-	panel.FindChildTraverse("BpLockedText").text = $.Localize("#" + "battlepass_gives")
+	rew_panel.RemoveClass("Unlocked");
+	panel.FindChildTraverse("BpLockedText").text = $.Localize("#" + "battlepass_gives");
 	// Здесь нужно отправить в луа проверку на получение шмотки  id - айди шмотки
 	GameEvents.SendCustomGameEventToServer("EventBattlePass", {  Type: id  }); // отправляешь ивент 
 }
@@ -278,11 +278,11 @@ function CreateDonateReward(parent, reward_level, lvl) {
 function GetLevelPlayer(tmp) {
 	let exp = Number(tmp), level = 0;
 	while (true) {
-		let req = exp_battlepass[String(level + 1)];
+		const req = exp_battlepass[String(level + 1)];
 		if (req !== undefined && exp >= req) {
 			exp -= req;
 			level++;
-		} else break;
+		} else {break;}
 	}
 	return level;
 }
@@ -290,11 +290,11 @@ function GetLevelPlayer(tmp) {
 function GetExpPlayer(tmp) {
 	let exp = Number(tmp), level = 0;
 	while (true) {
-		let req = exp_battlepass[String(level + 1)];
+		const req = exp_battlepass[String(level + 1)];
 		if (req !== undefined && exp >= req) {
 			exp -= req;
 			level++;
-		} else break;
+		} else {break;}
 	}
 	return exp;
 }
@@ -303,41 +303,41 @@ function PurchaseOpenNotif()
 {
     if (GameUI.CustomUIConfig().OpenPanelBuyPass)
     {
-        GameUI.CustomUIConfig().OpenPanelBuyPass()
+        GameUI.CustomUIConfig().OpenPanelBuyPass();
     }
 }
 
-GameUI.CustomUIConfig().OpenBPGlobal = Battlepass_OpenPanel
+GameUI.CustomUIConfig().OpenBPGlobal = Battlepass_OpenPanel;
 
 GameUI.CustomUIConfig().UpdateBPButton = function()
 {
     player_bp_info[2] = CustomNetTables.GetTableValue("Shop", Players.GetLocalPlayer())[15];
-    let ButtonBuyPass = $("#ButtonBuyPass")
-    ButtonBuyPass.style.opacity = (player_bp_info[2][0] == null || player_bp_info[2][0] == "none") ? 1 : 0
-}
+    const ButtonBuyPass = $("#ButtonBuyPass");
+    ButtonBuyPass.style.opacity = (player_bp_info[2][0] == null || player_bp_info[2][0] == "none") ? 1 : 0;
+};
 
 function StartBPTimer()
 {
-    var secondsStr = CustomNetTables.GetTableValue("Shop", "datetime")[1]["1"];
+    const secondsStr = CustomNetTables.GetTableValue("Shop", "datetime")[1]["1"];
 
     if (!secondsStr || secondsStr === "" || secondsStr === "0")
-        return;
+        {return;}
 
-    var remaining = parseInt(secondsStr, 10);
+    let remaining = parseInt(secondsStr, 10);
     if (isNaN(remaining))
-        return;
+        {return;}
 
-    var label = $("#BattlePassTimer");
+    const label = $("#BattlePassTimer");
 
     function update()
     {
-        if (!label) return;
+        if (!label) {return;}
 
-        if (remaining < 0) remaining = 0;
+        if (remaining < 0) {remaining = 0;}
 
-        var days = Math.floor(remaining / 86400);
-        var hours = Math.floor((remaining % 86400) / 3600);
-        var minutes = Math.floor((remaining % 3600) / 60);
+        const days = Math.floor(remaining / 86400);
+        const hours = Math.floor((remaining % 86400) / 3600);
+        const minutes = Math.floor((remaining % 3600) / 60);
 
         label.text = $.Localize("#battlepass_date") + days + "d " + hours + "h " + minutes + "m";
 

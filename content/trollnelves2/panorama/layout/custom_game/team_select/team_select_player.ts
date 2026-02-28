@@ -13,9 +13,9 @@ function TeamSelectPlayer_OnLeaveTeamPressed() {
 // Update the contents of the player panel when the player information has been modified.
 //--------------------------------------------------------------------------------------------------
 function OnPlayerDetailsChanged() {
-    var playerId = $.GetContextPanel().GetAttributeInt("player_id", -1);
-    var playerInfo = Game.GetPlayerInfo(playerId);
-    if (!playerInfo) return;
+    const playerId = $.GetContextPanel().GetAttributeInt("player_id", -1);
+    const playerInfo = Game.GetPlayerInfo(playerId);
+    if (!playerInfo) {return;}
     $("#PlayerName").text = playerInfo.player_name;
     $("#PlayerAvatar").steamid = playerInfo.player_steamid;
 

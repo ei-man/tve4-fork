@@ -1,18 +1,18 @@
 // @ts-nocheck
 function MutePlayer()
 {
-    let playerId = $.GetContextPanel().PlayerID
+    const playerId = $.GetContextPanel().PlayerID;
     const newIsMuted = !Game.IsPlayerMuted(playerId);
     Game.SetPlayerMuted(playerId, newIsMuted);
-    $.GetContextPanel().SetHasClass('player_muted', newIsMuted);
+    $.GetContextPanel().SetHasClass("player_muted", newIsMuted);
 }
 
 function TopScoreboard_SendResource()
 {
-    let playerId = $.GetContextPanel().PlayerID
+    const playerId = $.GetContextPanel().PlayerID;
     if (GameUI.CustomUIConfig().OpenSendResourcePanelGlobal)
     {
-        GameUI.CustomUIConfig().OpenSendResourcePanelGlobal(playerId)
+        GameUI.CustomUIConfig().OpenSendResourcePanelGlobal(playerId);
     }
 }
 

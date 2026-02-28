@@ -3,13 +3,13 @@
 (function()
 {
     function show(){
-        $.GetContextPanel().RemoveClass('hidden');
-        $.GetContextPanel().AddClass('showed');
+        $.GetContextPanel().RemoveClass("hidden");
+        $.GetContextPanel().AddClass("showed");
     }
 
     function hide(){
-        $.GetContextPanel().RemoveClass('showed');
-        $.GetContextPanel().AddClass('hidden');
+        $.GetContextPanel().RemoveClass("showed");
+        $.GetContextPanel().AddClass("hidden");
     }
 
     $.GetContextPanel().onDataUpdate = function(data){
@@ -18,9 +18,9 @@
             return;
         }
 
-        var labelText = $.GetContextPanel().FindChildTraverse('Text');
+        const labelText = $.GetContextPanel().FindChildTraverse("Text");
         if(data.text){
-            labelText.text = data.text
+            labelText.text = data.text;
         }
 
         if(data.width){

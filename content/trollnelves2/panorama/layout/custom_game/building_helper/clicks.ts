@@ -1,20 +1,20 @@
 // @ts-nocheck
-"use strict"
+"use strict";
 
 function GetMouseTarget() {
-  var mouseEntities = GameUI.FindScreenEntities( GameUI.GetCursorPosition() )
+  const mouseEntities = GameUI.FindScreenEntities( GameUI.GetCursorPosition() );
 
   for ( var e of mouseEntities ) {
     if ( !e.accurateCollision )
-      continue
-    return e.entityIndex
+      {continue;}
+    return e.entityIndex;
   }
 
   for ( var e of mouseEntities ) {
-    return e.entityIndex
+    return e.entityIndex;
   }
 
-  return 0
+  return 0;
 }
 
 // Handle Right Button events
@@ -29,11 +29,11 @@ function OnRightButtonPressed() {
   // Builder Right Click
   if ( IsBuilder( mainSelected ) || Entities.GetAbilityByName(mainSelected,"repair") ) {
     // Cancel BH
-    if (!pressedShift) SendCancelCommand();
+    if (!pressedShift) {SendCancelCommand();}
 
     // If it's mousing over entities
     if (mouseEntities.length > 0) {
-      for ( var e of mouseEntities ) {
+      for ( const e of mouseEntities ) {
         const targetIndex = e.entityIndex;
         if (right_click_repair && Clicks_IsCustomBuilding(targetIndex) && Entities.GetHealthPercent(targetIndex) < 100 && IsAlliedUnit(targetIndex, mainSelected)) {
           GameEvents.SendCustomGameEventToServer( "building_helper_repair_command", {targetIndex: targetIndex, queue: pressedShift});
@@ -44,12 +44,12 @@ function OnRightButtonPressed() {
     }
   }
 
-  return false
+  return false;
 }
 
 // Handle Left Button events
 function OnLeftButtonPressed() {
-  return false
+  return false;
 }
 
 function Clicks_IsCustomBuilding(entIndex){
@@ -57,32 +57,32 @@ function Clicks_IsCustomBuilding(entIndex){
 }
 
 function Clicks_HasModifier(entIndex, modifierName) {
-  var nBuffs = Entities.GetNumBuffs(entIndex)
-  for (var i = 0; i < nBuffs; i++) {
+  const nBuffs = Entities.GetNumBuffs(entIndex);
+  for (let i = 0; i < nBuffs; i++) {
     if (Buffs.GetName(entIndex, Entities.GetBuff(entIndex, i)) == modifierName)
-      return true
+      {return true;}
   }
-  return false
+  return false;
 }
 
 function IsBuilder(entIndex) {
-  var tableValue = CustomNetTables.GetTableValue( "builders", entIndex.toString())
-  return (tableValue !== undefined) && (tableValue.IsBuilder == 1)
+  const tableValue = CustomNetTables.GetTableValue( "builders", entIndex.toString());
+  return (tableValue !== undefined) && (tableValue.IsBuilder == 1);
 }
 
 function IsAlliedUnit(entIndex, targetIndex) {
-  return (Entities.GetTeamNumber(entIndex) == Entities.GetTeamNumber(targetIndex))
+  return (Entities.GetTeamNumber(entIndex) == Entities.GetTeamNumber(targetIndex));
 }
 
 // Main mouse event callback
 GameUI.SetMouseCallback( function( eventName, arg ) {
-  var CONTINUE_PROCESSING_EVENT = false
-  var LEFT_CLICK = (arg === 0)
-  var RIGHT_CLICK = (arg === 1)
+  const CONTINUE_PROCESSING_EVENT = false;
+  const LEFT_CLICK = (arg === 0);
+  const RIGHT_CLICK = (arg === 1);
   
   if ( GameUI.GetClickBehaviors() !== CLICK_BEHAVIORS.DOTA_CLICK_BEHAVIOR_NONE )
-    return CONTINUE_PROCESSING_EVENT
-  var mainSelected = Players.GetLocalPlayerPortraitUnit()
+    {return CONTINUE_PROCESSING_EVENT;}
+  const mainSelected = Players.GetLocalPlayerPortraitUnit();
   
   if ( eventName === "pressed" || eventName === "doublepressed")
   {
@@ -90,20 +90,20 @@ GameUI.SetMouseCallback( function( eventName, arg ) {
     // Builder Clicks
     if (IsBuilder(mainSelected))
       //$.Msg("state2 " + state)
-      if (LEFT_CLICK)
+      {if (LEFT_CLICK)
       {
         ////$.Msg("state3 " + state)
-        return (state === "active") ? SendBuildCommand() : OnLeftButtonPressed()
+        return (state === "active") ? SendBuildCommand() : OnLeftButtonPressed();
       }
       else if (RIGHT_CLICK)
-        return OnRightButtonPressed()
+        {return OnRightButtonPressed();}}
 
       if (LEFT_CLICK)
-       return OnLeftButtonPressed()
+       {return OnLeftButtonPressed();}
       else if (RIGHT_CLICK)
-        return OnRightButtonPressed()
+        {return OnRightButtonPressed();}
       
     }
 
-  return CONTINUE_PROCESSING_EVENT
-} )
+  return CONTINUE_PROCESSING_EVENT;
+} );
