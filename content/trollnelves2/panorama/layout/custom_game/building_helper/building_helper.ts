@@ -63,7 +63,6 @@ if (!Root.loaded) {
 }
 
 function StartBuildingHelper(params) {
-    Game.:
     if (params !== undefined) {
         // Cancel previous scheduled update loop
         if (buildTimer !== null) {
