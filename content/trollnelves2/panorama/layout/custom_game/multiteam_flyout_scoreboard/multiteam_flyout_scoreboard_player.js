@@ -1,3 +1,4 @@
+// @ts-nocheck
 const ui = GameUI.CustomUIConfig();
 function ToggleMute() {
     const playerId = $.GetContextPanel().GetAttributeInt('player_id', -1);
@@ -7,14 +8,12 @@ function ToggleMute() {
         $.GetContextPanel().SetHasClass('player_muted', newIsMuted);
     }
 }
-
 function OnGiveResourcesButton() {
     const playerPanel = $.GetContextPanel();
     const casterID = Players.GetLocalPlayer();
     const target = playerPanel.pID;
     const gold = Number(playerPanel.FindChildInLayoutFile('GoldEntry').text) || 0;
-    const lumber =
-        Number(playerPanel.FindChildInLayoutFile('LumberEntry').text) || 0;
+    const lumber = Number(playerPanel.FindChildInLayoutFile('LumberEntry').text) || 0;
     playerPanel.FindChildInLayoutFile('GoldEntry').text = '';
     playerPanel.FindChildInLayoutFile('LumberEntry').text = '';
     GameEvents.SendCustomGameEventToServer('give_resources', {
@@ -24,7 +23,6 @@ function OnGiveResourcesButton() {
         casterID,
     });
 }
-
 function OnVoteKickButton() {
     const playerPanel = $.GetContextPanel();
     const casterID = Players.GetLocalPlayer();
@@ -34,7 +32,6 @@ function OnVoteKickButton() {
         casterID,
     });
 }
-
 function OnVoteFlagButton() {
     const playerPanel = $.GetContextPanel();
     const casterID = Players.GetLocalPlayer();
@@ -60,7 +57,6 @@ function OnGiveAllResourcesButton() {
         casterID,
     });
 }
-
 function OnGiveAllGoldButton() {
     const playerPanel = $.GetContextPanel();
     const casterID = Players.GetLocalPlayer();
@@ -90,16 +86,15 @@ function OnGiveAllLumberButton() {
     });
 }
 (function () {
-const playerId = $.GetContextPanel().GetAttributeInt('player_id', -1);
-$.GetContextPanel().SetHasClass('player_muted', Game.IsPlayerMuted(playerId));
+    const playerId = $.GetContextPanel().GetAttributeInt('player_id', -1);
+    $.GetContextPanel().SetHasClass('player_muted', Game.IsPlayerMuted(playerId));
 })();
-
 function FlyoutScoreboard_ShowHero() {
     const localPlayer = Game.GetLocalPlayerInfo();
     const playerPanel = $.GetContextPanel();
     const target = playerPanel.pID;
     const localPlayerTeamId = localPlayer ? localPlayer.player_team_id : -1;
-    if ( localPlayer.player_team_id === localPlayerTeamId ) {
+    if (localPlayer.player_team_id === localPlayerTeamId) {
         const targetHeroEntityId = Players.GetPlayerHeroEntityIndex(target);
         GameUI.MoveCameraToEntity(targetHeroEntityId);
     }

@@ -1,15 +1,12 @@
+// @ts-nocheck
 "use strict";
-
-function HighFiveInit()
-{
-    let high_five_woda = FindDotaHudElement("high_five_woda")
-    if (high_five_woda)
-    {
+function HighFiveInit() {
+    let high_five_woda = FindDotaHudElement("high_five_woda");
+    if (high_five_woda) {
         high_five_woda.DeleteAsync(0);
     }
     var container = GetDotaHud().FindChildTraverse("center_block");
-    if (container)
-    {
+    if (container) {
         var high_five = $.CreatePanel("Button", $.GetContextPanel(), "high_five_woda");
         high_five.BLoadLayoutSnippet("HighFiveSnippet");
         high_five.SetPanelEvent("onactivate", () => HighFive());
@@ -20,62 +17,50 @@ function HighFiveInit()
         high_five.SetPanelEvent("onmouseout", () => $.DispatchEvent("DOTAHideAbilityTooltip", high_five));
         high_five.SetParent(container);
     }
-    SetBuffs()
-    Tick()
+    SetBuffs();
+    Tick();
 }
-
-function HighFive()
-{
+function HighFive() {
     var selected_index = Players.GetLocalPlayerPortraitUnit();
-    let heroIndex = Game.GetPlayerInfo(Game.GetLocalPlayerID()).player_selected_hero_entity_index
-    if (heroIndex != selected_index)
-    {
+    let heroIndex = Game.GetPlayerInfo(Game.GetLocalPlayerID()).player_selected_hero_entity_index;
+    if (heroIndex != selected_index) {
         return;
     }
     var ability = Entities.GetAbilityByName(heroIndex, "high_five_custom");
     if (ability)
         Abilities.ExecuteAbility(ability, heroIndex, false);
 }
-
-function Tick() 
-{
-    let high_five_woda = FindDotaHudElement("high_five_woda")
+function Tick() {
+    let high_five_woda = FindDotaHudElement("high_five_woda");
     var selected_index = Players.GetLocalPlayerPortraitUnit();
-    let heroIndex = Game.GetPlayerInfo(Game.GetLocalPlayerID()).player_selected_hero_entity_index
-    if (high_five_woda)
-    {
-        let label = high_five_woda.FindChildTraverse("CooldownLabel")
-        let background = high_five_woda.FindChildTraverse("CooldownBackground")
+    let heroIndex = Game.GetPlayerInfo(Game.GetLocalPlayerID()).player_selected_hero_entity_index;
+    if (high_five_woda) {
+        let label = high_five_woda.FindChildTraverse("CooldownLabel");
+        let background = high_five_woda.FindChildTraverse("CooldownBackground");
         high_five_woda.SetHasClass("Hidden", !Entities.IsRealHero(selected_index));
-        if (heroIndex == selected_index) 
-        {
+        if (heroIndex == selected_index) {
             var ability = Entities.GetAbilityByName(selected_index, "high_five_custom");
-            if (ability)
-            {
+            if (ability) {
                 var cooldown = Abilities.GetCooldownTimeRemaining(ability);
                 var cooldown_ready = Abilities.IsCooldownReady(ability);
                 var max_cooldown = Abilities.GetCooldownLength(ability);
                 label.text = cooldown_ready ? "" : String(Math.ceil(cooldown));
                 background.visible = !cooldown_ready;
                 label.visible = !cooldown_ready;
-                if (!cooldown_ready) 
-                {
+                if (!cooldown_ready) {
                     var progress = (cooldown / max_cooldown) * -360;
                     background.style.clip = `radial(50% 75%, 0deg, ${progress}deg)`;
                 }
             }
         }
-        else
-        {
+        else {
             background.visible = false;
             label.visible = false;
         }
     }
     $.Schedule(0.03, () => Tick());
 }
-
-function SetBuffs() 
-{
+function SetBuffs() {
     var buffs = FindDotaHudElement("buffs");
     if (buffs)
         buffs.style.marginBottom = "196px";
@@ -83,5 +68,4 @@ function SetBuffs()
     if (debuffs)
         debuffs.style.marginBottom = "196px";
 }
-
-HighFiveInit()
+HighFiveInit();

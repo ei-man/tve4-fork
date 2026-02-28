@@ -1,9 +1,8 @@
+// @ts-nocheck
 'use strict';
-
 GameUI.SetRenderBottomInsetOverride(0);
-
 var state = 'disabled';
-var frame_rate = 1/20;
+var frame_rate = 1 / 20;
 var buildTimer = null;
 var tree_update_interval = 1;
 var size = 0;
@@ -30,7 +29,6 @@ var last_tree_update = Game.GetGameTime();
 var treeGrid = [];
 var cutTrees = [];
 var GamePos;
-
 // building_settings.kv options
 var grid_alpha = CustomNetTables.GetTableValue("building_settings", "grid_alpha").value;
 var alt_grid_alpha = CustomNetTables.GetTableValue("building_settings", "alt_grid_alpha").value;
@@ -41,26 +39,21 @@ var recolor_ghost = CustomNetTables.GetTableValue("building_settings", "recolor_
 var turn_red = CustomNetTables.GetTableValue("building_settings", "turn_red").value;
 var permanent_alt_grid = CustomNetTables.GetTableValue("building_settings", "permanent_alt_grid").value;
 var update_trees = CustomNetTables.GetTableValue("building_settings", "update_trees").value;
-
 var height_restriction;
 if (CustomNetTables.GetTableValue("building_settings", "height_restriction") !== undefined)
     height_restriction = CustomNetTables.GetTableValue("building_settings", "height_restriction").value;
-
 var GRID_TYPES = CustomNetTables.GetTableValue("building_settings", "grid_types");
-CustomNetTables.SubscribeNetTableListener("building_settings", function() {
+CustomNetTables.SubscribeNetTableListener("building_settings", function () {
     GRID_TYPES = CustomNetTables.GetTableValue("building_settings", "grid_types");
 });
-
 var Root = $.GetContextPanel();
 var localHeroIndex;
-
 if (!Root.loaded) {
     Root.GridNav = [];
     Root.squareX = 0;
     Root.squareY = 0;
     Root.loaded = true;
 }
-
 function StartBuildingHelper(params) {
     if (params !== undefined) {
         // Cancel previous scheduled update loop
@@ -70,7 +63,6 @@ function StartBuildingHelper(params) {
         }
         // Destroy any existing particles
         EndBuildingHelper();
-
         // Set the parameters passed by AddBuilding
         localHeroIndex = Players.GetPlayerHeroEntityIndex(Players.GetLocalPlayer());
         state = params.state;
@@ -83,24 +75,19 @@ function StartBuildingHelper(params) {
         propScale = params.propScale;
         offsetZ = params.offsetZ;
         modelOffset = params.modelOffset;
-
         requires = GetRequiredGridType(entindex);
         distance_to_gold_mine = HasGoldMineDistanceRestriction(entindex);
-
         // If we chose to not recolor the ghost model, set it white
         var ghost_color = [0, 255, 0];
         if (!recolor_ghost)
             ghost_color = [255, 255, 255];
-
         pressedShift = GameUI.IsShiftDown();
-
         // Building Ghost
         modelParticle = Particles.CreateParticle("particles/buildinghelper/ghost_model.vpcf", ParticleAttachment_t.PATTACH_CUSTOMORIGIN, 0);
         Particles.SetParticleControlEnt(modelParticle, 1, entindex, ParticleAttachment_t.PATTACH_ABSORIGIN_FOLLOW, "follow_origin", Entities.GetAbsOrigin(entindex), true);
         Particles.SetParticleControl(modelParticle, 2, ghost_color);
         Particles.SetParticleControl(modelParticle, 3, [model_alpha, 0, 0]);
         Particles.SetParticleControl(modelParticle, 4, [scale, 0, 0]);
-
         // Grid squares
         gridParticles = [];
         for (var x = 0; x < size * size; x++) {
@@ -109,7 +96,6 @@ function StartBuildingHelper(params) {
             Particles.SetParticleControl(particle, 3, [grid_alpha, 0, 0]);
             gridParticles.push(particle);
         }
-
         // Prop particle attachment
         if (params.propIndex !== undefined) {
             propParticle = Particles.CreateParticle("particles/buildinghelper/ghost_model.vpcf", ParticleAttachment_t.PATTACH_CUSTOMORIGIN, 0);
@@ -118,14 +104,12 @@ function StartBuildingHelper(params) {
             Particles.SetParticleControl(propParticle, 3, [model_alpha, 0, 0]);
             Particles.SetParticleControl(propParticle, 4, [propScale, 0, 0]);
         }
-
         rangeOverlayActive = false;
         overlayParticles = [];
     }
     if (state == 'active') {
         // Schedule next update and store handle
         buildTimer = $.Schedule(frame_rate, StartBuildingHelper);
-
         // Get all the visible entities
         var entities = Entities.GetAllEntitiesByClassname('npc_dota_building');
         var hero_entities = Entities.GetAllHeroEntities();
@@ -133,7 +117,6 @@ function StartBuildingHelper(params) {
         var dummy_entities = Entities.GetAllEntitiesByName('npc_dota_base');
         var building_entities = Entities.GetAllBuildingEntities();
         entities = entities.concat(hero_entities, building_entities, creature_entities, dummy_entities);
-
         // Build the entity grid with the construction sizes and entity origins
         entityGrid = [];
         for (var i = 0; i < entities.length; i++) {
@@ -141,21 +124,22 @@ function StartBuildingHelper(params) {
                 continue;
             var entPos = Entities.GetAbsOrigin(entities[i]);
             var squares = GetConstructionSize(entities[i]);
-
             if (squares > 0) {
                 BlockGridSquares(entPos, squares, GRID_TYPES["BLOCKED"]);
-            } else {
+            }
+            else {
                 if (Entities.GetUnitName(entities[i]) == 'npc_dota_units_base') {
                     if (BuildingHelper_HasModifier(entities[i], "modifier_tree_cut"))
                         cutTrees[entPos] = entities[i];
-                } else if (Entities.GetTeamNumber(entities[i]) != Entities.GetTeamNumber(builderIndex) && !BuildingHelper_HasModifier(entities[i], "modifier_out_of_world")) {
+                }
+                else if (Entities.GetTeamNumber(entities[i]) != Entities.GetTeamNumber(builderIndex) && !BuildingHelper_HasModifier(entities[i], "modifier_out_of_world")) {
                     BlockGridSquares(entPos, 2, GRID_TYPES["BLOCKED"]);
-                } else if (entities[i] == builderIndex) {
+                }
+                else if (entities[i] == builderIndex) {
                     BlockGridSquares(entPos, 2, GRID_TYPES["BLOCKED"]);
                 }
             }
         }
-
         // Update treeGrid (slowly, as its the most expensive)
         if (update_trees) {
             var time = Game.GetGameTime();
@@ -170,7 +154,6 @@ function StartBuildingHelper(params) {
                 }
             }
         }
-
         var mPos = GameUI.GetCursorPosition();
         altDown = GameUI.IsAltDown();
         var SHIFT = altDown ? 128 : 0;
@@ -179,59 +162,60 @@ function StartBuildingHelper(params) {
             if (GamePos !== null) {
                 SnapToGrid(GamePos, size);
                 invalid = false;
-                var color = [0,255,0];
+                var color = [0, 255, 0];
                 var part = 0;
-                var halfSide = size*32;
+                var halfSide = size * 32;
                 var boundingRect = {
-                    leftBorderX:  GamePos[0] - halfSide,
+                    leftBorderX: GamePos[0] - halfSide,
                     rightBorderX: GamePos[0] + halfSide,
-                    topBorderY:   GamePos[1] + halfSide,
+                    topBorderY: GamePos[1] + halfSide,
                     bottomBorderY: GamePos[1] - halfSide
                 };
-                if (GamePos[0] > 10000000) return;
-
+                if (GamePos[0] > 10000000)
+                    return;
                 // Building Base Grid
                 for (var x = boundingRect.leftBorderX + 32; x <= boundingRect.rightBorderX - 32; x += 64) {
                     for (var y = boundingRect.topBorderY - 32; y >= boundingRect.bottomBorderY + 32; y -= 64) {
                         var pos = SnapHeight(x, y, GamePos[2] + 5 + SHIFT);
-                        if (part > size*size) return;
+                        if (part > size * size)
+                            return;
                         var gridParticle = gridParticles[part++];
                         Particles.SetParticleControl(gridParticle, 0, pos);
-                        color = IsBlocked(pos) ? [255,0,0] : [0,255,0];
-                        if (color[0] == 255) invalid = true;
+                        color = IsBlocked(pos) ? [255, 0, 0] : [0, 255, 0];
+                        if (color[0] == 255)
+                            invalid = true;
                         Particles.SetParticleControl(gridParticle, 2, color);
                     }
                 }
-
                 // Overlay Grid
                 if (overlayParticles.length == 0) {
-                    for (var i = 0; i < overlay_size*overlay_size; i++) {
+                    for (var i = 0; i < overlay_size * overlay_size; i++) {
                         var p = Particles.CreateParticle("particles/buildinghelper/square_overlay.vpcf", ParticleAttachment_t.PATTACH_CUSTOMORIGIN, 0);
-                        Particles.SetParticleControl(p, 1, [32,0,0]);
-                        Particles.SetParticleControl(p, 3, [alt_grid_alpha,0,0]);
+                        Particles.SetParticleControl(p, 1, [32, 0, 0]);
+                        Particles.SetParticleControl(p, 3, [alt_grid_alpha, 0, 0]);
                         overlayParticles.push(p);
                     }
                 }
-                color = [255,255,255];
+                color = [255, 255, 255];
                 part = 0;
-                halfSide = overlay_size*32;
+                halfSide = overlay_size * 32;
                 boundingRect = {
-                    leftBorderX:  GamePos[0] - halfSide,
+                    leftBorderX: GamePos[0] - halfSide,
                     rightBorderX: GamePos[0] + halfSide,
-                    topBorderY:   GamePos[1] + halfSide,
+                    topBorderY: GamePos[1] + halfSide,
                     bottomBorderY: GamePos[1] - halfSide
                 };
                 for (var x = boundingRect.leftBorderX + 32; x <= boundingRect.rightBorderX - 32; x += 64) {
                     for (var y = boundingRect.topBorderY - 32; y >= boundingRect.bottomBorderY + 32; y -= 64) {
                         var pos2 = SnapHeight(x, y, GamePos[2] + 5 + SHIFT);
-                        if (part >= overlay_size*overlay_size) return;
+                        if (part >= overlay_size * overlay_size)
+                            return;
                         var op = overlayParticles[part++];
-                        color = (IsBlocked(pos2) || TooCloseToGoldmine(pos2)) ? [255,0,0] : [255,255,255];
+                        color = (IsBlocked(pos2) || TooCloseToGoldmine(pos2)) ? [255, 0, 0] : [255, 255, 255];
                         Particles.SetParticleControl(op, 0, pos2);
                         Particles.SetParticleControl(op, 2, color);
                     }
                 }
-
                 var modelPos = SnapHeight(GamePos[0], GamePos[1], GamePos[2] + 2 + SHIFT);
                 if (invalid) {
                     if (rangeOverlayActive && rangeOverlay !== undefined) {
@@ -239,33 +223,31 @@ function StartBuildingHelper(params) {
                         Particles.ReleaseParticleIndex(rangeOverlay);
                         rangeOverlayActive = false;
                     }
-                } else {
+                }
+                else {
                     if (!rangeOverlayActive) {
                         rangeOverlay = Particles.CreateParticle("particles/buildinghelper/range_overlay.vpcf", ParticleAttachment_t.PATTACH_CUSTOMORIGIN, localHeroIndex);
-                        Particles.SetParticleControl(rangeOverlay, 1, [range,0,0]);
-                        Particles.SetParticleControl(rangeOverlay, 2, [255,255,255]);
-                        Particles.SetParticleControl(rangeOverlay, 3, [range_overlay_alpha,0,0]);
+                        Particles.SetParticleControl(rangeOverlay, 1, [range, 0, 0]);
+                        Particles.SetParticleControl(rangeOverlay, 2, [255, 255, 255]);
+                        Particles.SetParticleControl(rangeOverlay, 3, [range_overlay_alpha, 0, 0]);
                         rangeOverlayActive = true;
                     }
                 }
-                if (rangeOverlay !== undefined) Particles.SetParticleControl(rangeOverlay, 0, modelPos);
-
+                if (rangeOverlay !== undefined)
+                    Particles.SetParticleControl(rangeOverlay, 0, modelPos);
                 modelPos[2] += modelOffset;
                 Particles.SetParticleControl(modelParticle, 0, modelPos);
-
                 if (turn_red) {
-                    var mc = invalid ? [255,0,0] : [255,255,255];
+                    var mc = invalid ? [255, 0, 0] : [255, 255, 255];
                     Particles.SetParticleControl(modelParticle, 2, mc);
                 }
             }
         }
-
         if ((!GameUI.IsShiftDown() && pressedShift) || !Entities.IsAlive(builderIndex)) {
             EndBuildingHelper();
         }
     }
 }
-
 function EndBuildingHelper() {
     state = 'disabled';
     if (buildTimer !== null) {
@@ -298,7 +280,6 @@ function EndBuildingHelper() {
     }
     overlayParticles = [];
 }
-
 function SendBuildCommand(params) {
     if (invalid) {
         CreateErrorMessage({ message: "#error_invalid_build_position" });
@@ -319,12 +300,10 @@ function SendBuildCommand(params) {
     }
     return true;
 }
-
 function SendCancelCommand(params) {
     EndBuildingHelper();
     GameEvents.SendCustomGameEventToServer("building_helper_cancel_command", {});
 }
-
 function CreateErrorMessage(msg) {
     var reason = msg.reason || 80;
     if (msg.message) {
@@ -333,14 +312,14 @@ function CreateErrorMessage(msg) {
             reason: reason,
             message: msg.message
         });
-    } else {
+    }
+    else {
         GameEvents.SendEventClientSide("dota_hud_error_message", {
             splitscreenplayer: 0,
             reason: reason
         });
     }
 }
-
 function RegisterGNV(msg) {
     var GridNav = [];
     var squareX = msg.squareX;
@@ -353,10 +332,13 @@ function RegisterGNV(msg) {
         var chr = msg.gnv.charCodeAt(i);
         if (chr >= 48 && chr <= 57) {
             strlength += String.fromCharCode(chr);
-        } else {
+        }
+        else {
             var num = parseInt(strlength);
-            if (isNaN(num)) num = 1;
-            for (var j = 0; j < num; j++) arr.push(String.fromCharCode(chr));
+            if (isNaN(num))
+                num = 1;
+            for (var j = 0; j < num; j++)
+                arr.push(String.fromCharCode(chr));
             strlength = "";
         }
     }
@@ -366,7 +348,8 @@ function RegisterGNV(msg) {
         var code = msg.gnv.charCodeAt(i) - 58;
         for (var j = 4; j >= 0; j -= 2) {
             var g = (code & (3 << j)) >> j;
-            if (g != 0) arr.push(g);
+            if (g != 0)
+                arr.push(g);
         }
     }
     var x = 0;
@@ -382,7 +365,6 @@ function RegisterGNV(msg) {
     Root.squareY = squareY;
     Root.boundX = boundX;
     Root.boundY = boundY;
-
     treeGrid = [];
     var treeEntities = Entities.GetAllEntitiesByClassname('ent_dota_tree');
     for (var i = 0; i < treeEntities.length; i++) {
@@ -390,44 +372,37 @@ function RegisterGNV(msg) {
         BlockGridSquares(treePos, 2, "TREE");
     }
 }
-
 function RequestGNV() {
     GameEvents.SendCustomGameEventToServer("gnv_request", {});
 }
-
-(function() {
+(function () {
     RequestGNV();
     GameEvents.SubscribeProtected("building_helper_enable", StartBuildingHelper);
     GameEvents.SubscribeProtected("building_helper_end", EndBuildingHelper);
     GameEvents.SubscribeProtected("gnv_register", RegisterGNV);
 })();
-
 function SnapToGrid(vec, size) {
     if (size % 2 != 0) {
         vec[0] = SnapToGrid32(vec[0]);
         vec[1] = SnapToGrid32(vec[1]);
-    } else {
+    }
+    else {
         vec[0] = SnapToGrid64(vec[0]);
         vec[1] = SnapToGrid64(vec[1]);
     }
 }
-
 function SnapToGrid64(coord) {
     return 64 * Math.floor(0.5 + coord / 64);
 }
-
 function SnapToGrid32(coord) {
     return 32 + 64 * Math.floor(coord / 64);
 }
-
 function SnapHeight(x, y, z) {
     return [x, y, z - ((z + 1) % 128)];
 }
-
 function IsBlocked(position) {
     var y = WorldToGridPosX(position[0]) - Root.boundX;
     var x = WorldToGridPosY(position[1]) - Root.boundY;
-
     if (height_restriction !== undefined && position[2] < height_restriction)
         return true;
     if (Root.GridNav[x] == null) {
@@ -446,22 +421,22 @@ function IsBlocked(position) {
         return true;
     return false;
 }
-
 function BlockEntityGrid(position, gridType) {
     var y = WorldToGridPosX(position[0]) - Root.boundX;
     var x = WorldToGridPosY(position[1]) - Root.boundY;
-    if (entityGrid[x] === undefined) entityGrid[x] = [];
-    if (entityGrid[x][y] === undefined) entityGrid[x][y] = 0;
+    if (entityGrid[x] === undefined)
+        entityGrid[x] = [];
+    if (entityGrid[x][y] === undefined)
+        entityGrid[x][y] = 0;
     entityGrid[x][y] |= gridType;
 }
-
 function BlockTreeGrid(position) {
     var y = WorldToGridPosX(position[0]) - Root.boundX;
     var x = WorldToGridPosY(position[1]) - Root.boundY;
-    if (treeGrid[x] === undefined) treeGrid[x] = [];
+    if (treeGrid[x] === undefined)
+        treeGrid[x] = [];
     treeGrid[x][y] = GRID_TYPES["BLOCKED"];
 }
-
 function BlockGridSquares(position, squares, gridType) {
     var halfSide = (squares / 2) * 64;
     var boundingRect = {
@@ -476,7 +451,8 @@ function BlockGridSquares(position, squares, gridType) {
                 BlockTreeGrid([x, y, 0]);
             }
         }
-    } else {
+    }
+    else {
         for (var x = boundingRect.leftBorderX + 32; x <= boundingRect.rightBorderX - 32; x += 64) {
             for (var y = boundingRect.topBorderY - 32; y >= boundingRect.bottomBorderY + 32; y -= 64) {
                 BlockEntityGrid([x, y, 0], gridType);
@@ -484,7 +460,6 @@ function BlockGridSquares(position, squares, gridType) {
         }
     }
 }
-
 function BlockGridInRadius(position, radius, gridType) {
     var boundingRect = {
         leftBorderX: position[0] - radius,
@@ -500,21 +475,17 @@ function BlockGridInRadius(position, radius, gridType) {
         }
     }
 }
-
 function WorldToGridPosX(x) {
     return Math.floor(x / 64);
 }
-
 function WorldToGridPosY(y) {
     return Math.floor(y / 64);
 }
-
 function GetConstructionSize(entIndex) {
     var entName = Entities.GetUnitName(entIndex);
     var table = CustomNetTables.GetTableValue("buildings", entName);
     return table ? table.size : 0;
 }
-
 function GetRequiredGridType(entIndex) {
     var entName = Entities.GetUnitName(entIndex);
     var table = CustomNetTables.GetTableValue("buildings", entName);
@@ -528,7 +499,6 @@ function GetRequiredGridType(entIndex) {
     }
     return GRID_TYPES["BUILDABLE"];
 }
-
 function GetCustomGrid(entIndex) {
     var entName = Entities.GetUnitName(entIndex);
     var table = CustomNetTables.GetTableValue("buildings", entName);
@@ -539,33 +509,29 @@ function GetCustomGrid(entIndex) {
         }
     }
 }
-
 function HasGoldMineDistanceRestriction(entIndex) {
     var entName = Entities.GetUnitName(entIndex);
     var table = CustomNetTables.GetTableValue("buildings", entName);
     return table ? table.distance_to_gold_mine : 0;
 }
-
 function GetClosestDistanceToGoldMine(position) {
     var building_entities = Entities.GetAllEntitiesByClassname('npc_dota_building');
     var minDistance = 99999;
     for (var i = 0; i < building_entities.length; i++) {
         if (Entities.GetUnitName(building_entities[i]) == "gold_mine") {
             var d = Length2D(position, Entities.GetAbsOrigin(building_entities[i]));
-            if (d < minDistance) minDistance = d;
+            if (d < minDistance)
+                minDistance = d;
         }
     }
     return minDistance;
 }
-
 function TooCloseToGoldmine(position) {
     return distance_to_gold_mine > 0 && GetClosestDistanceToGoldMine(position) < distance_to_gold_mine;
 }
-
 function Length2D(v1, v2) {
     return Math.sqrt((v2[0] - v1[0]) ** 2 + (v2[1] - v1[1]) ** 2);
 }
-
 function BuildingHelper_HasModifier(entIndex, modifierName) {
     var nBuffs = Entities.GetNumBuffs(entIndex);
     for (var i = 0; i < nBuffs; i++) {
