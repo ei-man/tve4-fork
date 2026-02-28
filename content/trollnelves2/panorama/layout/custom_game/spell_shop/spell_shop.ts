@@ -375,13 +375,13 @@ function SpellShop_OpenSpellShop()
 {
     if(active_shop == 0)
     {
-        $("#SpellShopPanel").SetHasClass("SpellShop_CloseSpellShop", true); 
+        $("#SpellShopPanel").SetHasClass("CloseSpellShop", true); 
         active_shop = null;
     }
     else
     {
         active_shop = 0;
-        $("#SpellShopPanel").SetHasClass("SpellShop_CloseSpellShop", false); // !$("#SpellShopPanel").BHasClass("SpellShop_CloseSpellShop")
+        $("#SpellShopPanel").SetHasClass("CloseSpellShop", false); // !$("#SpellShopPanel").BHasClass("CloseSpellShop")
         SpellShop_InitSpellList();
         // UpdateBuyButton() -- remove buy random aspect
         UpdateActivatedSpellVisual();
@@ -392,13 +392,13 @@ function SpellShop_OpenSpellShoTroll()
 {
     if(active_shop == 1)
     {
-        $("#SpellShopPanel").SetHasClass("SpellShop_CloseSpellShop", true); 
+        $("#SpellShopPanel").SetHasClass("CloseSpellShop", true); 
         active_shop = null;
     }
     else
     {
         active_shop = 1;
-        $("#SpellShopPanel").SetHasClass("SpellShop_CloseSpellShop", false); // !$("#SpellShopPanel").BHasClass("SpellShop_CloseSpellShop")
+        $("#SpellShopPanel").SetHasClass("CloseSpellShop", false); // !$("#SpellShopPanel").BHasClass("CloseSpellShop")
         SpellShop_InitSpellList();
         // UpdateBuyButton() -- remove buy random aspect
     }
@@ -406,7 +406,7 @@ function SpellShop_OpenSpellShoTroll()
 
 function SpellShop_CloseSpellShop()
 {
-    $("#SpellShopPanel").SetHasClass("SpellShop_CloseSpellShop",true ); // !$("#SpellShopPanel").BHasClass("SpellShop_CloseSpellShop")
+    $("#SpellShopPanel").SetHasClass("CloseSpellShop",true ); // !$("#SpellShopPanel").BHasClass("CloseSpellShop")
     active_shop = null;
 }
 

@@ -312,13 +312,13 @@ function SpellTemple_OpenSpellShop()
 {
     if(active_shop == 0)
     {
-        $("#SpellShopPanel").SetHasClass("SpellTemple_CloseSpellShop", true); 
+        $("#SpellShopPanel").SetHasClass("CloseSpellShop", true); 
         active_shop = null;
     }
     else
     {
         active_shop = 0;
-        $("#SpellShopPanel").SetHasClass("SpellTemple_CloseSpellShop", false); // !$("#SpellShopPanel").BHasClass("SpellTemple_CloseSpellShop")
+        $("#SpellShopPanel").SetHasClass("CloseSpellShop", false); // !$("#SpellShopPanel").BHasClass("CloseSpellShop")
         SpellTemple_InitSpellList();
     }
 }
@@ -327,20 +327,20 @@ function SpellTemple_OpenSpellShoTroll()
 {
     if(active_shop == 1)
     {
-        $("#SpellShopPanel").SetHasClass("SpellTemple_CloseSpellShop", true); 
+        $("#SpellShopPanel").SetHasClass("CloseSpellShop", true); 
         active_shop = null;
     }
     else
     {
         active_shop = 1;
-        $("#SpellShopPanel").SetHasClass("SpellTemple_CloseSpellShop", false); // !$("#SpellShopPanel").BHasClass("SpellTemple_CloseSpellShop")
+        $("#SpellShopPanel").SetHasClass("CloseSpellShop", false); // !$("#SpellShopPanel").BHasClass("CloseSpellShop")
         SpellTemple_InitSpellList();
     }
 }
 
 function SpellTemple_CloseSpellShop()
 {
-    $("#SpellShopPanel").SetHasClass("SpellTemple_CloseSpellShop",true ); // !$("#SpellShopPanel").BHasClass("SpellTemple_CloseSpellShop")
+    $("#SpellShopPanel").SetHasClass("CloseSpellShop",true ); // !$("#SpellShopPanel").BHasClass("CloseSpellShop")
     active_shop = null;
 }
 
