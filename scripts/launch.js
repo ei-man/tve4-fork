@@ -9,7 +9,12 @@ const { getAddonName, getDotaPath } = require("./utils");
     // You can add any arguments there
     // For example `+dota_launch_custom_game ${getAddonName()} dota` would automatically load "dota" map
     const args = ["-novid", "-tools", "-addon", getAddonName()];
-    spawn(path.join(win64, "dota2.exe"), args, { detached: true, cwd: win64 });
+    const child = spawn(path.join(win64, "dota2.exe"), args, {
+        detached: true,
+        cwd: win64,
+        stdio: "ignore",
+    });
+    child.unref();
 })().catch(error => {
     console.error(error);
     process.exit(1);
